@@ -1,23 +1,19 @@
-import { Add, ArrowBack, ArrowForward, ArrowForwardIosOutlined, Clear, Create, Delete, ExpandLess, ExpandMore, Inbox, ListAltOutlined, Poll, PollOutlined } from '@mui/icons-material'
+import { Add, ArrowBack, ArrowForward, ArrowForwardIosOutlined, Clear, Create, Delete, ExpandLess, ExpandMore, Inbox, ListAltOutlined, Poll, PollOutlined, Sync, SyncAltOutlined } from '@mui/icons-material'
 import { Grid, List, ListItemButton, ListItemIcon, ListSubheader, Paper, ListItemText, Collapse, ListItem, IconButton, TextField, Button, Typography, Slide, Snackbar, CircularProgress, LinearProgress, Box, Card, CardHeader, CardContent, Avatar, CardActions, Table, TableBody, TableCell, TableRow, Divider } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { handleToPolls, pollPendingStatus, pollRegStatus, resetPollRegStatus, selectAuthStatus, selectCreatorData, selectIsPending, selectVoterData, shouldNavigate } from '../features/mainSlice'
-import { GetCandidateDetails, GetPolls } from '../features/Utility/utility'
+import { GetCandidateDetails, GetPolls, getTextField } from '../features/Utility/utility'
 import GetBox, { GetBoxNew, GetBoxNew2 } from './layout-components/getBox'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { addCandidateThunk, addPollDetailsThunk, currentPollId, getPollData, getPollDetailsPending, getPollDetailsThunk, turnPidNull } from '../features/mainSlice'
+import { addCandidateThunk, addPollDetailsThunk, currentPollId, getPollData, getPollDetailsThunk, turnPidNull } from '../features/mainSlice'
 import Voter from './voter'
 import { getUserType } from '../features/mainSlice'
 import PollDetails from './polldetails'
 import VoterSubscriptions from './voterDetails'
-
-function TransitionUp(props) {
-  return <Slide {...props} direction="up" />;
-}
-
+import '../App.css'
 
 
 function DashBoard() {
@@ -33,6 +29,8 @@ function DashBoard() {
   const dispatch = useDispatch()
   const navigate = useSelector(shouldNavigate)
   const [startDate, setStartDate] = React.useState(null);
+  const [hFlag, setHFlag] = useState(false)
+
   const [tomorrow, setToday] = React.useState(null)
   const [endDate, setEndDate] = React.useState(null);
   const [minEndDate, setMinEndDate] = React.useState(new Date(
@@ -103,19 +101,12 @@ function DashBoard() {
     setOpenPolls(!openPolls)
   }
 
-  const getWhatHappend = () => {
-    switch (authStatus) {
-      case 190:
-        return 'user does not exist, sign up or re-check your ID'
-      case 151:
-        return 'wrong password'
-    }
-  }
-
   const getListItem = (callback) =>
     <Grid item container
       justifyContent={'center'}
+      alignItems={'center'}
       direction={'row'}
+      bgcolor={'background.black'}
       sx={{
         width: '100%'
       }}
@@ -123,8 +114,7 @@ function DashBoard() {
       {prs === 0 && <Box
         sx={{
           width: '100%',
-          backgroundColor: '#0d102f',
-          borderRadius: 2
+          backgroundColor: 'background.cardBackground',
         }}
       >
         <Grid
@@ -134,16 +124,13 @@ function DashBoard() {
           direction={'column'}
           sx={{
             width: '100%',
-            background: '#24232',
             padding: 2,
-            borderRadius: 4,
             margin: 1
           }}
         >
           <Grid item>
             <TextField
               disabled={disableCP}
-              multiline={true}
               label={'POLE TITLE'}
               onChange={(e) => {
                 setPollTitle(e.target.value)
@@ -152,9 +139,19 @@ function DashBoard() {
               variant='filled'
               required={true}
               sx={{
-                borderRadius: 5,
+
+                backgroundColor: "background.cardBackground",
                 width: 240,
-                marginBottom: 1
+                marginBottom: 1,
+                color: 'text.light',
+                accentColor: 'text.light'
+              }}
+
+              InputLabelProps={{
+                className: 'textFieldColor_label'
+              }}
+              InputProps={{
+                className: 'textFieldColor_label'
               }}
             ></TextField>
 
@@ -186,9 +183,15 @@ function DashBoard() {
                           new Date().getMonth(),
                           new Date(newValue).getDate() + 1))
                       }
-
+                    }} InputLabelProps={{
+                      className: 'textFieldColor_label'
                     }}
-                    renderInput={(params) => <TextField {...params} />} />
+                    InputProps={{
+                      className: 'textFieldColor_label'
+                    }}
+                    renderInput={(params) => <TextField variant='filled' InputLabelProps={{
+                      className: 'textFieldColor_label'
+                    }} {...params} />} />
                 </Grid>
                 <Grid item mt={1}>
 
@@ -201,8 +204,18 @@ function DashBoard() {
                     value={endDate}
                     onChange={(newValue) => {
                       setEndDate(newValue);
+                    }} InputLabelProps={{
+                      className: 'textFieldColor_label'
                     }}
-                    renderInput={(params) => <TextField {...params} />}
+                    InputProps={{
+                      className: 'textFieldColor_label'
+                    }}
+                    renderInput={(params) => <TextField variant='filled' InputLabelProps={{
+                      className: 'textFieldColor_label'
+                    }}
+                      InputProps={{
+                        className: 'textFieldColor_label'
+                      }} {...params} />}
                   />
                 </Grid>
               </Grid></LocalizationProvider></Grid>
@@ -215,7 +228,9 @@ function DashBoard() {
                 !isPending ? <Button
                   disabled={disableCP}
                   sx={{
-                    marginTop: 1
+                    marginTop: 2,
+                    color: 'text.light',
+                    borderColor: 'text.light'
                   }}
                   variant={'outlined'}
                   type='reset'
@@ -233,35 +248,38 @@ function DashBoard() {
                     }
                   }}
                 >Create Poll
-                </Button> : <CircularProgress />}
+                </Button> : <Box
+                  m={1}
+                ><CircularProgress size={'2rem'} /></Box>}
             </Grid>
           </Grid>
 
         </Grid></Box>
       }
+      <Box height={2} width='100%' bgcolor={'white'}></Box>
       <Box
 
         display={prs === 200 ? 'block' : 'none'}
-        m={1}
         sx={{
           width: '100%',
-          backgroundColor: '#0d102f',
-          borderRadius: 3
+          backgroundColor: 'background.cardBackground',
         }}>
         <Grid
-          container
+          item container
+          justifyContent={'center'}
+          alignItems={'center'}
+          direction={'column'}
           sx={{
             width: '100%',
-            // background:'#123432',
             padding: 2,
-            borderRadius: 4,
-            margin: 1
+            margin: 3
           }}
         >
-          <Grid item container spacing={1} component={'form'}
+          <Grid item container component={'form'}
             justifyContent={'center'}
             direction={'column'}
             alignItems={'center'}
+            pr={3}
           >
             <Grid item>
               <TextField
@@ -273,8 +291,19 @@ function DashBoard() {
                 variant='filled'
                 required={true}
                 sx={{
-                  borderRadius: 5,
-                  width: 240
+
+                  backgroundColor: "background.cardBackground",
+                  width: 240,
+                  marginBottom: 1,
+                  color: 'text.light',
+                  accentColor: 'text.light'
+                }}
+
+                InputLabelProps={{
+                  className: 'textFieldColor_label'
+                }}
+                InputProps={{
+                  className: 'textFieldColor_label'
                 }}
               ></TextField>
             </Grid>
@@ -289,21 +318,32 @@ function DashBoard() {
                 variant='filled'
                 required={true}
                 sx={{
-                  borderRadius: 5,
-                  minWidth: 240
+
+                  backgroundColor: "background.cardBackground",
+                  width: 240,
+                  marginBottom: 1,
+                  color: 'text.light',
+                  accentColor: 'text.light'
+                }}
+
+                InputLabelProps={{
+                  className: 'textFieldColor_label'
+                }}
+                InputProps={{
+                  className: 'textFieldColor_label'
                 }}
               ></TextField>
             </Grid>
-            <Grid item container
-              justifyContent={'center'}
-              alignItems={'center'}
+            <Grid item
 
             >
               <Grid item>
                 {!isPending && <Button
                   sx={{
                     marginTop: 1.5,
-                    width: 100
+                    width: 100,
+                    borderColor: 'text.light',
+                    color: 'text.light'
                   }}
                   variant={'outlined'}
                   type='reset'
@@ -346,13 +386,10 @@ function DashBoard() {
     justifyContent={'center'}
     alignItems={'center'}
     direction={"column"}
-    mt={1}
-    mb={2}
-    pb={3}
+    py={4}
     sx={{
-      backgroundColor: '#0d102a',
+      backgroundColor: 'background.light',
       width: '100%',
-      borderRadius: 2
     }}>
 
     <Grid item container sx={{ width: '100%' }}
@@ -386,147 +423,160 @@ function DashBoard() {
       </Collapse>
 
     </Grid>
-
-
-
-
-    {pollData.length !== 0 && !isPending && <Grid
-      container
-      minWidth={630}
-      maxWidth={630}
-      direction={'row'}
-      justifyContent={'center'}>
-
-    </Grid>}
   </Grid>
 
 
-  const userInfo = (data) => <Grid item
+  const userInfo = (data) => <Card
     sx={{
-      backgroundColor: 'black',
-      width: '100%',
-    }} >
-    {/*  */}
-    <Card
+      backgroundColor: 'background.cardBackground',
+    }}>
 
+    <CardHeader
       sx={{
-        backgroundColor: 'black',
-        width: '100%',
-      }}>
+        color: 'text.light',
+        backgroundColor: 'background.cardBackground',
+      }}
+      title={`${data[3]}`.toUpperCase()}>
 
-      <CardHeader
-        sx={{
-          color: 'white',
-          backgroundColor: 'black',
-        }}
-        title={`${data[3]}`.toUpperCase()}>
+    </CardHeader>
 
-      </CardHeader>
-
-      <CardContent
-        sx={{
-          backgroundColor: '#0d102a',
-          color: '#f2f2f2',
-          width: '100%'
-        }}
+    <CardContent
+      sx={{
+        backgroundColor: 'background.cardBackground'
+      }}
+    >
+      <Grid container
+        justifyContent={'center'}
+        alignItems={'center'}
+        direction={'row'}
       >
-        <Grid container
-          justifyContent={'center'}
-          alignItems={'center'}
-          direction={'row'}
-        >
-          <Grid item>
-            <Avatar
-              component={'div'}
-              sx={{
-                width: 200,
-                height: 200,
-                objectFit: 'cover',
-                borderRadius: 4
-              }}
-              src={require('./images/file.jpg')}
-            >
-
-
-            </Avatar>
-
-          </Grid>
-          <Grid item
+        <Grid item>
+          <Avatar
+            component={'div'}
             sx={{
-              backgroundColor: '#242429',
-              marginX: 4
+              width: 200,
+              height: 200,
+              objectFit: 'cover',
+              borderRadius: 4
+            }}
+            src={require('../images/file.jpg')}
+          >
+
+
+          </Avatar>
+
+        </Grid>
+        <Grid item
+          sx={{
+            backgroundColor: '#242429',
+            marginX: 4
+          }}
+        >
+          <Table
+            sx={{
+              backgroundColor: 'black'
             }}
           >
-            <Table
-              sx={{
-                backgroundColor: 'black'
-              }}
-            >
-              <TableBody>
-                <TableRow sx={{
-                  color: 'white'
-                }}>
-                  <TableCell sx={getDec}>Name</TableCell>
-                  <TableCell sx={getDec}>{`${data[0]}`}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={getDec}>Email</TableCell>
-                  <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={getDec}>Contact</TableCell>
-                  <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
-                </TableRow>
+            <TableBody>
+              <TableRow>
+                <TableCell sx={getDec}>UID</TableCell>
+                <TableCell sx={getDec}>{`${data['id']}`}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={getDec}>Name</TableCell>
+                <TableCell sx={getDec}>{`${data[0]}`}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={getDec}>Email</TableCell>
+                <TableCell sx={getDec}>{`${data[1]}`}</TableCell> 
+              </TableRow>
+              <TableRow>
+                <TableCell sx={getDec}>Contact</TableCell>
+                <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
+              </TableRow>
 
-              </TableBody>
-            </Table>
-          </Grid>
+            </TableBody>
+          </Table>
         </Grid>
-      </CardContent>
-      <CardActions >
-        <Grid container
-          sx={{ width: '100%' }}>
-          <Grid item>
-            <IconButton
-              title={'show my polls'}
+      </Grid>
+    </CardContent>
+    <CardActions
+      sx={{
+        backgroundColor: 'background.black'
+      }}
+    >
+      <Grid container
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        direction={'row'}>
+        <Grid item>
+          {!hFlag
+            ? <IconButton
+              variant='outlined'
+              title='show status'
               onClick={() => {
-                //::::::::::::::::::::::::::::::::::: DISPATCH 
-                dispatch(handleToPolls(true))
+                if (isPending != true) {
+                  setOpen(true)
+                  setOpenPolls(true)
+                  dispatch(getPollDetailsThunk(JSON.stringify({ '_email': cData[1] })))
+                }
+                setHFlag(true)
               }}
-            ><ArrowForwardIosOutlined sx={getIconDec} /></IconButton>
-          </Grid>
+            ><SyncAltOutlined sx={getIconDec}></SyncAltOutlined>
+            </IconButton>
+            : isPending
+              ? <CircularProgress size={'2rem'} sx={{
+                color: 'text.light'
+              }} />
+              : <IconButton
+                title='show my polls'
+                sx={getIconDec}
+                onClick={() => {
+                  setHFlag(false)
+                  dispatch(handleToPolls(true))
+
+                }}
+              ><ArrowForwardIosOutlined sx={getIconDec} />
+
+              </IconButton>
+          }
+
         </Grid>
-        <IconButton
-          title={'create poll'}
-          onClick={() => {
+      </Grid>
+      <IconButton
+        title={'create poll'}
+        onClick={() => {
+          if (!isPending) {
+            setOpenPolls(true)
             dispatch(resetPollRegStatus())
             handleClick()
-          }}
-        >{open ? <Create sx={getIconDec} /> : <Clear sx={getIconDec}></Clear>}</IconButton>
-        <IconButton
-          title={'polls'}
-          onClick={handleOpenPolls}
-        >{openPolls ? <PollOutlined sx={getIconDec} /> : <Clear sx={getIconDec} />}</IconButton>
-      </CardActions>
-    </Card>
-  </Grid>
+            setHFlag(false)
+
+          }
+        }}
+      >{open ? <Create sx={getIconDec} /> : <Clear sx={getIconDec}></Clear>}</IconButton>
+      <IconButton
+        title={'polls'}
+        onClick={() => {
+          if (!isPending) {
+            setOpen(true)
+            handleOpenPolls()
+            setHFlag(false)
+
+          }
+        }}
+      >{openPolls ? <PollOutlined sx={getIconDec} /> : <Clear sx={getIconDec} />}</IconButton>
+    </CardActions>
+  </Card>
 
   return (
     <Box
-      pt={11}
+      pt={10}
+      mb={4}
       sx={{
-        minWidth: 1300,
-        backgroundColor: '#0d102f'
+        backgroundColor: 'transparent',
+        width: 1300
       }}>
-
-
-      {/* <Snackbar
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={transition}
-          message="I love snacks"
-          key={transition ? transition.name : ''}
-        /> */}
 
 
       <Grid container

@@ -70,197 +70,169 @@ function Voter({ vData }) {
 
     }, [])
 
-    const sectionOne = <Box>
-        <Grid
-            container item
-            justifyContent={'center'}
-            alignItems={'center'}
-            direction={'row'}
-            sm={12}
-        >
-
-
-
-        </Grid>
-
-    </Box>
-
-
-    const userInfo = (data) => <Grid item
+    const userInfo = (data) => <Card
         sx={{
-            backgroundColor: 'black',
-            width: '100%',
-        }} >
-        {/*  */}
-        <Card
+            backgroundColor: 'background.cardBackground',
+        }}>
 
+        <CardHeader
             sx={{
-                backgroundColor: 'black',
-                width: '100%',
-            }}>
+                color: 'text.light',
+                backgroundColor: 'background.cardBackground',
+            }}
+            title={`${data[3]}`.toUpperCase()}>
 
-            <CardHeader
-                sx={{
-                    color: 'white',
-                    backgroundColor: 'black',
-                }}
-                title={`${data[3]}`.toUpperCase()}>
+        </CardHeader>
 
-            </CardHeader>
-
-            <CardContent
-                sx={{
-                    backgroundColor: '#0d102a',
-                    color: '#f2f2f2',
-                    width: '100%'
-                }}
+        <CardContent
+            sx={{
+                backgroundColor: 'background.cardBackground'
+            }}
+        >
+            <Grid container
+                justifyContent={'center'}
+                alignItems={'center'}
+                direction={'row'}
             >
-                <Grid container
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                    direction={'row'}
-                >
-                    <Grid item>
-                        <Avatar
-                            component={'div'}
-                            sx={{
-                                width: 200,
-                                height: 200,
-                                objectFit: 'cover',
-                                borderRadius: 4
-                            }}
-                            src={require('./images/file.jpg')}
-                        >
-
-
-                        </Avatar>
-
-                    </Grid>
-                    <Grid item
+                <Grid item>
+                    <Avatar
+                        component={'div'}
                         sx={{
-                            backgroundColor: '#242429',
-                            marginX: 4
+                            width: 200,
+                            height: 200,
+                            objectFit: 'cover',
+                            borderRadius: 4
+                        }}
+                        src={require('../images/file.jpg')}
+                    >
+
+
+                    </Avatar>
+
+                </Grid>
+                <Grid item
+                    sx={{
+                        backgroundColor: '#242429',
+                        marginX: 4
+                    }}
+                >
+                    <Table
+                        sx={{
+                            backgroundColor: 'black'
                         }}
                     >
-                        <Table
-                            sx={{
-                                backgroundColor: 'black'
-                            }}
-                        >
-                            <TableBody>
-                                <TableRow sx={{
-                                    color: 'white'
-                                }}>
-                                    <TableCell sx={getDec}>Name</TableCell>
-                                    <TableCell sx={getDec}>{`${data[0]}`}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell sx={getDec}>Email</TableCell>
-                                    <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell sx={getDec}>Contact</TableCell>
-                                    <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
-                                </TableRow>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell sx={getDec}>UID</TableCell>
+                                <TableCell sx={getDec}>{`${data['id']}`}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={getDec}>Name</TableCell>
+                                <TableCell sx={getDec}>{`${data[0]}`}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={getDec}>Email</TableCell>
+                                <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={getDec}>Contact</TableCell>
+                                <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
+                            </TableRow>
 
-                            </TableBody>
-                        </Table>
-                    </Grid>
+                        </TableBody>
+                    </Table>
                 </Grid>
-            </CardContent>
-            <CardActions >
-                <Grid container
-                    justifyContent={'space-between'}
-                    alignItems={'center'}
-                    direction={'row'}
-                >
-                    <Grid item>
-                        <Grid item
-                            m={2}
-                            justifyContent={'center'}
-                        >
-                            {!hFlag
-                                ? <IconButton
-                                    variant='outlined'
-                                    onClick={() => {
-                                        dispatch(getVoterPIDS(JSON.stringify({ _email: vData.voterId })))
-                                        setHFlag(true)
-                                    }}
-                                ><Downloading sx={getIconDec}></Downloading>
-                                </IconButton>
-                                : isPending
-                                    ? <CircularProgress />
-                                    : <IconButton
-                                        sx={getIconDec}
-                                        onClick={() => {
-                                            setHFlag(false)
-                                            dispatch(handleToPolls(true))
-
-                                        }}
-                                    ><ArrowForwardIosOutlined sx={getIconDec} />
-
-                                    </IconButton>
-                            }
-                        </Grid>
-                    </Grid>
-
+            </Grid>
+        </CardContent>
+        <CardActions >
+            <Grid container
+                justifyContent={'space-between'}
+                alignItems={'center'}
+                direction={'row'}
+            >
+                <Grid item>
                     <Grid item
-                        width={'70%'}
+                        m={2}
+                        justifyContent={'center'}
                     >
-                        <Search
-                            onChange={(e) => {
-                                setSearchablePID(e.target.value)
-                                if (pollStatus !== 0) {
-                                    dispatch(manageAfterSubscribe())
-                                }
-                            }}
-                        >
-                            <StyledInputBase
-                                placeholder="Enter a Poll-Id"
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </Search>
-                    </Grid>
-                    <Grid item>
-
-                        {!hFlag ? <IconButton
-                            onClick={() => {
-                                dispatch(getPoll(JSON.stringify({ '_pid': searchPID })))
-                            }}
-                            sx={getIconDec}
-                        >
-                            {!isPending
-                                ? <SearchRounded />
-                                : <SourceOutlined />}
-
-                        </IconButton> :
-                            <IconButton
+                        {!hFlag
+                            ? <IconButton
+                                variant='outlined'
                                 onClick={() => {
-                                    setHFlag(false)
-                                    dispatch(getPoll(JSON.stringify({ '_pid': searchPID })))
+                                    dispatch(getVoterPIDS(JSON.stringify({ _email: vData.voterId })))
+                                    setHFlag(true)
                                 }}
-                                sx={getIconDec}
-                            >
-                                <SearchRounded />
+                            ><Downloading sx={getIconDec}></Downloading>
                             </IconButton>
+                            : isPending
+                                ? <CircularProgress />
+                                : <IconButton
+                                    sx={getIconDec}
+                                    onClick={() => {
+                                        setHFlag(false)
+                                        dispatch(handleToPolls(true))
+
+                                    }}
+                                ><ArrowForwardIosOutlined sx={getIconDec} />
+
+                                </IconButton>
                         }
                     </Grid>
                 </Grid>
-            </CardActions>
-        </Card>
-    </Grid>
+
+                <Grid item
+                    width={'70%'}
+                >
+                    <Search
+                        onChange={(e) => {
+                            setSearchablePID(e.target.value)
+                            if (pollStatus !== 0) {
+                                dispatch(manageAfterSubscribe())
+                            }
+                        }}
+                    >
+                        <StyledInputBase
+                            placeholder="Enter a Poll-Id"
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
+                    </Search>
+                </Grid>
+                <Grid item>
+
+                    {!hFlag ? <IconButton
+                        onClick={() => {
+                            dispatch(getPoll(JSON.stringify({ '_pid': searchPID, '_vid': vData['voterId'] })))
+                        }}
+                        sx={getIconDec}
+                    >
+                        {!isPending
+                            ? <SearchRounded />
+                            : <SourceOutlined />}
+
+                    </IconButton> :
+                        <IconButton
+                            onClick={() => {
+                                setHFlag(false)
+                                dispatch(getPoll(JSON.stringify({ '_pid': searchPID, '_vid': vData['voterId'] })))
+                            }}
+                            sx={getIconDec}
+                        >
+                            <SearchRounded />
+                        </IconButton>
+                    }
+                </Grid>
+            </Grid>
+        </CardActions>
+    </Card>
 
     return (
         <Grid container
             justifyContent={'center'}
             alignItems={'center'}
             direction={"column"}
-            mt={1}
-            mb={2}
             sx={{
-                backgroundColor: '#0d102a',
+                backgroundColor: 'background.light',
                 width: '100%',
-                borderRadius: 2
             }}>
 
             <Grid item container sx={{ width: '100%' }}
@@ -286,7 +258,20 @@ function Voter({ vData }) {
                             color: 'red'
                         }}
                     /></Grid>
-                        <Grid item p={2}> No poll exist with this POLL-ID {searchPID}</Grid>
+                        <Grid item p={2}> No poll exist with this POLL-ID</Grid>
+                    </Grid>}
+                    {(pollStatus === 198) && <Grid
+                        container
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                        direction={'row'}
+                        m={2}
+                    >   <Grid item><NotAccessibleRounded
+                        sx={{
+                            color: 'red'
+                        }}
+                    /></Grid>
+                        <Grid item p={2}> You have already SUBSCRIBED to this POLL</Grid>
                     </Grid>}
                 </Grid>}
 

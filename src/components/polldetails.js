@@ -6,7 +6,7 @@ import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPollData, getVSPSSelector, getVSPS_THUNK, handleToPolls, selectIsPending } from '../features/mainSlice'
-import GetChartSection from '../features/Utility/utility'
+import GetChartSection, { onEmptyShowMessage } from '../features/Utility/utility'
 
 
 function PollDetails() {
@@ -22,7 +22,6 @@ function PollDetails() {
     // IMPORTED SELECTORS
     const pollData = useSelector(getPollData)
     const vsps = useSelector(getVSPSSelector)
-    console.log(JSON.stringify(vsps))
     const isVSPSPending = useSelector(selectIsPending)
 
     useEffect(() => {
@@ -47,14 +46,13 @@ function PollDetails() {
     return (
         <Paper
             sx={{
-                backgroundColor: "#252533",
+                backgroundColor: "background.cardBackground",
                 minHeight: 194,
-                borderRadius: 5,
-                padding: 2
+                padding: 2,
+                marginBottom: 5
             }}>
-            <Grid container justifyContent={"center"} spacing={1}>
-                <Grid
-                    container
+            <Grid container justifyContent={"center"}>
+                <Grid container item
                     sx={{
                         width: '100%'
                     }}
@@ -63,14 +61,13 @@ function PollDetails() {
                 >
                     <Grid item container
                         p={2}
-                        mx={1}
                         mb={2}
                         justifyContent={'space-between'}
                         alignItems={'center'}
                         direction={'row-reverse'}
                         sx={{
                             width: '100%',
-                            backgroundColor: 'black',
+                            backgroundColor: 'background.black',
                             borderRadius: 2
                         }}
                     >
@@ -96,14 +93,24 @@ function PollDetails() {
                             }}
                         ><ArrowBackOutlined sx={getIconDec} /></IconButton>
                     </Grid>
+                    {vsps.length === 0 && onEmptyShowMessage('you have not created any poll yet, So nothing to display')}
                     {vsps.map((data) => (
                         <Box
+                            m={2}
                             style={{
                                 width: '100%'
                             }}
                             key={data.pid}
                         >
                             <GetChartSection pollInfo={data.poll} deepInfo={data.cids} />
+                            <Box
+                                m={2}
+                                borderRadius={2}
+                                sx={{
+                                    width: '100%',
+                                    height: 4,
+                                    backgroundColor: 'background.main'
+                                }} ></Box>
                         </Box>
                     ))
                     }

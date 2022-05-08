@@ -1,49 +1,58 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/layout';
 import Home from './components/layout-components/home';
-import Appbar from './components/Appbar';
-import { Grid } from '@mui/material';
-import GetBox from './components/layout-components/getBox';
-import About from './components/about';
-import SignUp from './features/authentication/signUp';
-import SignIn from './features/authentication/signIn';
-import DashBoard from './components/dashBoard';
-import PollDetails from './components/polldetails';
-import { useDispatch } from 'react-redux';
-import { getGlobalPIDSList } from './features/voterSlice';
-import { useEffect, useState } from 'react';
-import VoterSubscriptions from './components/voterDetails';
-import { ThemeProvider } from 'styled-components';
-import { theme } from './theme';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { green, red } from '@mui/material/colors';
+import { useEffect } from 'react';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#000000'
+    },
+    background: {
+      main: '#18191e',
+      light: '#191d22',
+      different: '#393047',
+      purple: '#490064',
+      radio: '#633cbc',
+      black: '#000000',
+      cardBackground: '#252732',
+      white:'#f2f2f2',
+      chartColor:'#282A36'
+    },
+    text: {
+      main: '#564766',
+      light: '#cfcde3',
+      main2: '#71678b',
+      white: '#ffffff',
+      offwhite: '#f2f2f2',
+      purple: '#490064',
+      black: '#000000',
+      special: red
+    }
+  }
+})
 
 function App() {
 
-  const dispatch = useDispatch()
-  const [once, setOnce] = useState(false)
   useEffect(() => {
-    // dispatch(getGlobalPIDSList())
-    if(!once){
-      setOnce(true)
-    }
-    console.log('times')
-  }, [once])
-  
+    AOS.init(
+      { duration: 2000 }
+    )
+    AOS.refresh()
+  })
+
   return (
     <ThemeProvider theme={theme}>
-    <Router>
-      <Routes>
-      <Route exact path='/' element={<Home />} />
-      <Route exact path='/signUp' element={<SignUp />} />
-        <Route exact path='/signIn' element={<SignIn />} />
-        <Route exact path='/about' element={<About />} />
-        <Route exact path='/layout' element={<Layout />} />
-        <Route exact path='/dashboard' element={<DashBoard />} />
-        <Route exact path='/pollsdetails' element={<PollDetails />} />
-        <Route exact path='/vpd' element={<VoterSubscriptions />} />        
-      </Routes>
-    </Router></ThemeProvider>
+      <Router>
+        <Routes>
+          <Route exact path='/' element={<Home />} />
+        </Routes>
+      </Router></ThemeProvider>
   );
 }
 

@@ -1,88 +1,93 @@
 import { Add, ExpandLess, ExpandMore, KeyboardArrowDown, KeyboardArrowUp, KeyboardArrowUpOutlined, Person, Poll, Remove, Subscript, SubscriptionsRounded, SubscriptionsTwoTone, TableBar } from "@mui/icons-material"
-import { TextField, Grid, Typography, TableContainer, Table, TableCell, TableRow, TableHead, TableBody, IconButton, Button, Tooltip, Collapse, LinearProgress, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper } from "@mui/material"
+import { TextField, Grid, Typography, TableContainer, Table, TableCell, TableRow, TableHead, TableBody, IconButton, Button, Tooltip, Collapse, LinearProgress, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Card, CardContent } from "@mui/material"
 import GetBox, { GetBoxNew2 } from "../../components/layout-components/getBox"
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { currentPollId, getPollData, selectIsPending } from "../mainSlice"
-import { Box } from "@mui/system"
+import { Box, typographyVariant } from "@mui/system"
 import { Chart as chartjs } from "chart.js/auto";
 import { Bar } from "react-chartjs-2"
 import { addVoterPIDS, manageAfterSubscribe } from "../mainSlice"
+import '../../App.css'
 
 
-export const getTextField = (label, placeholder, ip, key, h, c) => {
+export const getTextField = (label, placeholder, ip, key, h, value) => {
   return <TextField
+    value={value !== null ? value : null}
     required
     component={'div'}
     key={key}
-    type={ip.inputMode}
+    type={ip !== null ? ip.inputMode : 'text'}
     label={label}
     variant={"filled"}
     fullWidth={true}
     sx={{
-      backgroundColor: "#252533",
+      backgroundColor: "background.cardBackground",
       maxWidth: 340,
+      color: 'text.light',
+      accentColor: 'text.light'
     }}
     onChange={h}
     placeholder={placeholder}
-
-    color={c} />
+    className={'textFieldColor'}
+    InputLabelProps={{
+      className: 'textFieldColor_label'
+    }}
+    InputProps={{
+      className: 'textFieldColor_label'
+    }}
+  />
 }
 
 
 export const GetCandidateDetails = ({
   data
 }) => {
-
+  const getDec = {
+    color: 'text.light'
+  }
   const cpID = useSelector(currentPollId)
 
-  const wrapper = <Grid container
-    justifyContent={'center'}
-    alignItems={'center'}
-  >
-    <Grid item container
-      justifyContent={'center'}
-      sx={{
-        width: '100%'
-      }}
-    >
-      <Typography>
-        Poll-ID : {!cpID ? '' : cpID}
-      </Typography>
-    </Grid>
-    <Grid item>
-      <TableContainer>
-        <Table
+  const wrapper =
+    <TableContainer aria-label="collapsible table" sx={{
+      backgroundColor: 'black'
+    }}>
+      <Table
 
-          sx={{ width: '100%' }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>S.NO.</TableCell>
-              <TableCell align="right">NAME</TableCell>
-              <TableCell align="right">MANIFESTO</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              data.map(row => (
-                <TableRow
-                  key={row.key}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.key}
-                  </TableCell>
-                  <TableCell align="right">{row.candidateName.toUpperCase()}</TableCell>
-                  <TableCell align="right">{row.candidateManifest}</TableCell>
+        sx={{ width: '100%' }} size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={getDec} align='center'><Typography>
+              Poll-ID : {!cpID ? '' : cpID}
+            </Typography></TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell sx={getDec}>S.NO.</TableCell>
+            <TableCell sx={getDec} align="right">NAME</TableCell>
+            <TableCell sx={getDec} align="right">MANIFESTO</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {
+            data.map(row => (
+              <TableRow
+                key={row.key}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell sx={getDec} component="th" scope="row">
+                  {row.key}
+                </TableCell>
+                <TableCell sx={getDec} align="right">{row.candidateName.toUpperCase()}</TableCell>
+                <TableCell sx={getDec} align="right">{row.candidateManifest}</TableCell>
 
-                </TableRow>
-              ))
-            }
-          </TableBody>
-        </Table>
-      </TableContainer></Grid>
-  </Grid>
-  return data.length > 1 && <GetBox c="#292732" br={5} content={wrapper} w={600} p={4}></GetBox>
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    </TableContainer>
+
+  return data.length > 1 && <GetBoxNew2 content={wrapper}></GetBoxNew2>
 
 }
 
@@ -106,7 +111,7 @@ function Row({ row }) {
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
-          sx={getIconDec}
+            sx={getIconDec}
             aria-label="expand row"
             size="small"
             onClick={() => setOpen(!open)}
@@ -126,7 +131,7 @@ function Row({ row }) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography sx={getDec}  variant={'h6'} gutterBottom component={'div'}>
+              <Typography sx={getDec} variant={'h6'} gutterBottom component={'div'}>
                 Candidate-Detials
               </Typography>
               <Table size="small" aria-label="purchases">
@@ -160,11 +165,7 @@ function Row({ row }) {
 
 export const GetPolls = () => {
   const getDec = {
-    color: '#f2f2f2'
-  }
-
-  const getIconDec = {
-    color: 'red'
+    color: 'text.light'
   }
 
   const pollData = useSelector(getPollData)
@@ -193,9 +194,7 @@ export const GetPolls = () => {
       </Table>
     </TableContainer>
 
-  const onEmptyPollData = <Grid>
-    There is no data in the poll
-  </Grid>
+  const onEmptyPollData = onEmptyShowMessage('you have not created any poll yet')
   return !isPending
     ? pollData.length !== 0
       ? <GetBoxNew2 content={wrapper}></GetBoxNew2>
@@ -210,6 +209,14 @@ const formatDate = (date) => {
 
 export function PollData({ deepInfo }) {
 
+  const typo = (content, com) => <Grid item>
+    <Typography
+      variant={com}
+      color={'text.light'}
+    >
+      {content}
+    </Typography>
+  </Grid>
   return (<Grid container
     justifyContent={'center'}
     alignItems={'left'}
@@ -227,39 +234,38 @@ export function PollData({ deepInfo }) {
       justifyContent={'space-between'}
       alignItems={'center'}
     >
-      <Typography
-        fontWeight={800}
-        sx={{
-          color: 'white'
-        }}
-      >
-        Poll Details
-      </Typography>
+      {typo('Poll Details')}
     </Grid>
-    <Grid item>
-      <Typography>
-        TITLE : {deepInfo.title}
-      </Typography>
-    </Grid>
-    <Grid item>
-      <Typography>
-        pollId : {deepInfo.pollId}
-      </Typography></Grid>
-    <Grid item>
-      <Typography>
-        DOC : {formatDate(deepInfo.createdAt)}
-      </Typography></Grid>
-    <Grid item>
-      <Typography>
-        Start Date : {formatDate(deepInfo.startdate)}
-      </Typography></Grid>
-    <Grid item>
-      <Typography>
-        End Date : {formatDate(deepInfo.enddate)}
-      </Typography></Grid>
+    {typo(`TITLE : ${deepInfo.title}`, 'h5')}
+    {typo(`pollId : ${deepInfo.pollId}`)}
+    {typo(`DOC : ${formatDate(deepInfo.createdAt)}`)}
+    {typo(`Start Date : ${formatDate(deepInfo.startdate)}`)}
+    {typo(`End Date : ${formatDate(deepInfo.enddate)}`)}
   </Grid>)
 }
 
+export const onEmptyShowMessage = (message) => <Grid container
+  justifyContent={'center'}
+  bgcolor={'transparent'}
+>
+  <Card
+    sx={{
+      borderRadius: 5,
+      backgroundColor: 'transparent'
+    }}
+  >
+    <CardContent
+      sx={{
+        margin: 2,
+        backgroundColor: 'background.black',
+        color: 'text.light',
+        borderRadius: 4
+      }}
+    >
+      {message}
+    </CardContent>
+  </Card>
+</Grid>
 
 
 function GetChartSection({ pollInfo, deepInfo }) {
@@ -289,39 +295,48 @@ function GetChartSection({ pollInfo, deepInfo }) {
       direction={'row'}
       justifyContent={'center'}
     >
-      <Grid item sx={open ? { width: '100%' } : {}}>
 
-
+      <Grid item
+        bgcolor={'background.cardBackground'}
+        p={3}
+        sx={{ width: '50%' }}>
         <Grid item
           container
           justifyContent={'center'}
-          alignItems={'center'}
+          alignItems={'left'}
           direction={'column'}
 
         ><PollData deepInfo={pollInfo} />
-        </Grid></Grid>
-      <Grid item>
-        <Collapse in={!open} timeout="auto" unmountOnExit>
-          <Box
-          >
-            <Bar
-              data={{
-                labels: cNames,   // should contain candidate names
-                datasets: [{
-                  label: '# of Votes',
-                  data: cVoteCount,    // should contain the votes
-                  borderColor: 'yellow',
-                  borderWidth: 1,
-                }]
-              }}
-              height={400}
-              width={500}
-              options={{
-                maintainAspectRatio: false
-              }}
-            />
-          </Box>
-        </Collapse></Grid>
+        </Grid>
+      </Grid>
+      <Grid item sx={{ width: '50%', }}>
+        <Box
+          bgcolor={'background.chartColor'}
+          p={2}
+          borderRadius={2}
+        >
+          <Bar
+
+            data={{
+              labels: cNames,   // should contain candidate names
+              datasets: [{
+                label: '# of Votes',
+                data: cVoteCount,    // should contain the votes
+                borderColor: 'yellow',
+                borderWidth: 1,
+              }]
+            }}
+            
+            height={400}
+            width={500}
+            options={
+              
+              {
+              maintainAspectRatio: false,
+            }}
+          />
+        </Box>
+      </Grid>
     </Grid>
   )
 }
@@ -432,6 +447,7 @@ export function ShowTable({ data, email }) {
               variant={'outlined'}
               onClick={() => {
                 dispatch(addVoterPIDS(JSON.stringify({ '_pid': row.pollId, '_email': email })))
+                console.log('get clicked in showtable')
                 dispatch(manageAfterSubscribe())
               }}
             >

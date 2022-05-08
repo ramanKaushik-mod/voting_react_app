@@ -38,5 +38,25 @@
 }
 
 .textFieldColor{
-  color:'white'!important
+  font-weight: 300;
+  color: #cfcde3 !important;
+}
+
+.practice{
+  background-color: #633cbc;
+}
+
+.textFieldColor {
+  font-weight: 300;
+  color: #cfcde3 !important;
+}
+
+.textFieldColor_label{
+  font-weight: 300;
+  color: #cfcde3 !important;
+}
+
+
+.masterTextField{
+  color:purple !important;
 }

@@ -244,10 +244,44 @@ export const votingTHUNK = createAsyncThunk(
     }
 )
 
+// forgot password thunks
 
+
+export const forgotCPassTHUNK = createAsyncThunk(
+    'main/forgotCPassTHUNK',
+    async (stringifiedData) => {
+        return await fetch(getEndPoint('ucp'), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: stringifiedData
+        }).then(res => {
+            return res.json()
+        })
+    }
+)
+
+export const forgotVPassTHUNK = createAsyncThunk(
+    'main/forgotVPassTHUNK',
+    async (stringifiedData) => {
+        return await fetch(getEndPoint('uvp'), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: stringifiedData
+        }).then(res => {
+            return res.json()
+        })
+    }
+)
 
 
 const initialState = {
+    progressForPID: '',
     userType: '',
     dashView: 0,
     isSignedIn: false,
@@ -289,9 +323,18 @@ const initialState = {
     gpdfv: [],
     gpdfvStatus: 0,
 
-    voteStatus:0,
+    voteStatus: 0,
 
-    error: false
+    error: false,
+
+    // extra and for minimal use
+    optionalEmail: null,
+
+    forgotPassTurnedOn: false,
+    forgotPassPending: false,
+    forgotPassStatus: 0,
+
+    sSnack:false
 }
 
 
@@ -308,13 +351,21 @@ const mainSlice = createSlice({
             state.voter = {}
         },
         setDashView: (state, action) => {
-            state.dashView = action.payload
+            if (action.payload.optionalEmail === null) {
+                state.optionalEmail = null
+                state.dashView = action.payload.dash
+            } else {
+                state.optionalEmail = action.payload.optionalEmail
+                state.dashView = action.payload.dash
+            }
         },
         resetRegStatus: (state) => {
             state.regStatus = 0
+            state.forgotPassStatus = 0
         },
         resetAuthStatus: (state) => {
             state.authStatus = 0
+            state.forgotPassStatus = 0
         },
         turnPidNull: (state) => {
             state.pid = null
@@ -329,6 +380,24 @@ const mainSlice = createSlice({
         manageAfterSubscribe: (state) => {
             state.pollStatus = 0
             state.poll = {}
+        },
+        handleProgressForPID: (state, action) => {
+            state.progressForPID = action.payload
+        },
+        handleForgotPassTurnedOn: (state, action) => {
+            state.forgotPassTurnedOn = action.payload
+        },
+        resetProgressForPID: (state) => {
+            state.progressForPID = ''
+        },
+        resetOptionalEmail: (state) => {
+            state.optionalEmail = null
+        },
+        resetForgotPassStatus: (state) => {
+            state.forgotPassStatus = 0
+        },
+        handleSnackBar: (state, action) => {
+            state.sSnack = action.payload
         }
 
     },
@@ -536,6 +605,7 @@ const mainSlice = createSlice({
             }).
             addCase(gpdfvTHUNK.fulfilled, (state, action) => {
                 state.gpdfvStatus = action.payload.res
+                console.log(state.gpdfvStatus)
                 if (state.gpdfvStatus === 200) {
                     state.gpdfv = action.payload.data
                     p(`gpdfv data ::: ${JSON.stringify(state.gpdfv)}`)
@@ -548,18 +618,41 @@ const mainSlice = createSlice({
                 state.error = true
             })      // getting poll data for voter
 
-            .addCase(votingTHUNK.pending, (state) =>{
+            .addCase(votingTHUNK.pending, (state) => {
                 state.isPending = true
             }).
-            addCase(votingTHUNK.fulfilled, (state, action)=> {
+            addCase(votingTHUNK.fulfilled, (state, action) => {
                 state.voteStatus = action.payload.res
                 state.isPending = false
             }).
-            addCase(votingTHUNK.rejected, (state, action) =>{
+            addCase(votingTHUNK.rejected, (state, action) => {
                 state.voteStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })  // voting now
+            .addCase(forgotCPassTHUNK.pending, (state) => {
+                state.forgotPassPending = true;
+            })
+            .addCase(forgotCPassTHUNK.fulfilled, (state, action) => {
+                state.forgotPassStatus = action.payload.res
+                state.forgotPassPending = false
+            }).addCase(forgotCPassTHUNK.rejected, (state, action) => {
+                state.forgotPassStatus = action.payload.res
+                state.forgotPassPending = false
+                state.error = true
+            })  // updating Creator passcode
+
+            .addCase(forgotVPassTHUNK.pending, (state) => {
+                state.forgotPassPending = true;
+            })
+            .addCase(forgotVPassTHUNK.fulfilled, (state, action) => {
+                state.forgotPassStatus = action.payload.res
+                state.forgotPassPending = false
+            }).addCase(forgotVPassTHUNK.rejected, (state, action) => {
+                state.forgotPassStatus = action.payload.res
+                state.forgotPassPending = false
+                state.error = true
+            })
     }
 })
 
@@ -614,9 +707,19 @@ export const gpdfvArrSelector = (state) => state.main.gpdfv
 
 export const voteStatus = (state) => state.main.voteStatus
 
+export const getProgressForPID = (state) => state.main.progressForPID
 
 export const selectError = (state) => state.main.error
 
+// extra selectors
+
+export const getOptionalEmail = (state) => state.main.optionalEmail
+
+export const getForgotPassTurnedOn = (state) => state.main.forgotPassTurnedOn
+export const getForgotPassStatus = (state) => state.main.forgotPassStatus
+export const getForgotPassPending = (state) => state.main.forgotPassPending
+
+export const getSnackBar = (state) => state.main.sSnack
 // A C T I O N  C R E A T O R S
 
 
@@ -629,7 +732,12 @@ export const {
     turnPidNull,
     resetPollRegStatus,
     handleToPolls,
-    manageAfterSubscribe
+    manageAfterSubscribe,
+    handleProgressForPID,
+    resetProgressForPID,
+    resetOptionalEmail,
+    handleForgotPassTurnedOn,
+    handleSnackBar
 } = mainSlice.actions
 
 
