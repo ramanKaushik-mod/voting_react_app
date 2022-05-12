@@ -72,6 +72,7 @@ function PollDetails() {
                         }}
                     >
                         {!isVSPSPending ? <IconButton
+                        title={'refresh dashboard'}
                             onClick={() => {
                                 if (!isVSPSPending) {
                                     setRefresh(!refresh)
@@ -86,7 +87,7 @@ function PollDetails() {
                         </Typography>}
 
                         <IconButton
-                            title={'show my polls'}
+                            title={'back to dashboard'}
                             onClick={() => {
                                 //::::::::::::::::::::::::::::::::::: DISPATCH 
                                 dispatch(handleToPolls(false))

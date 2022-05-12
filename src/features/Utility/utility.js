@@ -17,7 +17,7 @@ export const getTextField = (label, placeholder, ip, key, h, value) => {
     required
     component={'div'}
     key={key}
-    type={ip !== null ? ip.inputMode : 'text'}
+    inputMode={ip}
     label={label}
     variant={"filled"}
     fullWidth={true}
@@ -207,7 +207,21 @@ const formatDate = (date) => {
   return `${new Date(date).getDate()}-${new Date(date).getMonth() + 1}-${new Date(date).getFullYear()}`
 }
 
+
 export function PollData({ deepInfo }) {
+  const isActiveOrNot = (startDate, endDate) => {
+    startDate = new Date(`${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()}/${new Date(startDate).getFullYear()}`)
+    endDate = new Date(`${new Date(endDate).getMonth() + 1}/${new Date(endDate).getDate()}/${new Date(endDate).getFullYear()}`)
+
+    if (((new Date(startDate) <= new Date()) && (new Date(endDate) > new Date())) || ((new Date(startDate) < new Date()) && (new Date(endDate) >= new Date()))) {
+      return 'Active'
+    } else if (new Date(startDate) > new Date()) {
+      return 'Will Active Soon'
+    } else if (new Date(endDate) < new Date()) {
+      return 'Closed'
+    }
+  }
+
 
   const typo = (content, com) => <Grid item>
     <Typography
@@ -217,6 +231,7 @@ export function PollData({ deepInfo }) {
       {content}
     </Typography>
   </Grid>
+
   return (<Grid container
     justifyContent={'center'}
     alignItems={'left'}
@@ -240,7 +255,9 @@ export function PollData({ deepInfo }) {
     {typo(`pollId : ${deepInfo.pollId}`)}
     {typo(`DOC : ${formatDate(deepInfo.createdAt)}`)}
     {typo(`Start Date : ${formatDate(deepInfo.startdate)}`)}
+    {/* status {`${new Date(deepInfo['startdate']).getMonth()}`} */}
     {typo(`End Date : ${formatDate(deepInfo.enddate)}`)}
+    {typo(`Status : ${isActiveOrNot(new Date(deepInfo['startdate']), new Date(deepInfo['enddate']))}`)}
   </Grid>)
 }
 
@@ -326,14 +343,14 @@ function GetChartSection({ pollInfo, deepInfo }) {
                 borderWidth: 1,
               }]
             }}
-            
+
             height={400}
             width={500}
             options={
-              
+
               {
-              maintainAspectRatio: false,
-            }}
+                maintainAspectRatio: false,
+              }}
           />
         </Box>
       </Grid>
@@ -415,6 +432,18 @@ export const ShowTableRow = ({ row, cRow }) => {
   )
 }
 
+const isActiveOrNot = (startDate, endDate) => {
+  startDate = new Date(`${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()}/${new Date(startDate).getFullYear()}`)
+  endDate = new Date(`${new Date(endDate).getMonth() + 1}/${new Date(endDate).getDate()}/${new Date(endDate).getFullYear()}`)
+
+  if (((new Date(startDate) <= new Date()) && (new Date(endDate) > new Date())) || ((new Date(startDate) < new Date()) && (new Date(endDate) >= new Date()))) {
+    return 'Active'
+  } else if (new Date(startDate) > new Date()) {
+    return 'Will Active Soon'
+  } else if (new Date(endDate) < new Date()) {
+    return 'Closed'
+  }
+}
 
 
 const p = (data) => console.log(data)
@@ -443,20 +472,30 @@ export function ShowTable({ data, email }) {
       <TableHead>
         <TableRow>
           <TableCell >
-            <Button
+            {isActiveOrNot(new Date(row['startdate']), new Date(row['enddate'])) === 'Active' ? <Button
+              sx={{
+                color: 'red',
+                borderColor: 'text.light'
+              }}
               variant={'outlined'}
               onClick={() => {
                 dispatch(addVoterPIDS(JSON.stringify({ '_pid': row.pollId, '_email': email })))
-                console.log('get clicked in showtable')
                 dispatch(manageAfterSubscribe())
               }}
             >
-              <Typography
-                color={'red'}
-              >
-                SUBSCRIBE
-              </Typography>
-            </Button>
+              SUBSCRIBE
+            </Button> : <Grid
+            container
+            justifyContent={'center'}
+            py={0.5}
+              sx={{
+                color:'red',
+                border: 1,
+                borderColor:'text.light',
+                borderRadius:2,
+                paddingX:2
+              }}
+            ><Grid item>CLOSED</Grid></Grid>}
           </TableCell>
           <TableCell sx={getDec} align="right">POLL-ID</TableCell>
           <TableCell sx={getDec} align="right">TITLE</TableCell>

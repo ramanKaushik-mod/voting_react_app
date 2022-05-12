@@ -1,27 +1,20 @@
-import { Dashboard, DashboardOutlined, HomeOutlined, PollOutlined, PollRounded } from '@mui/icons-material'
-import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Grid, TextField, Typography, Slide } from '@mui/material'
+import { DashboardOutlined, HomeOutlined, PollOutlined } from '@mui/icons-material'
+import { Box, Button, Card, CardContent, CardHeader, CardMedia, Grid, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import SignIn from '../../features/authentication/signIn'
 import SignUp from '../../features/authentication/signUp'
-import { getDashViewSelector, handleForgotPassTurnedOn, handleToPolls, handleSnackBar, getSnackBar, isSignedInSelector, logOut, resetAuthStatus, resetOptionalEmail, resetRegStatus, setDashView, resetProgressForPID } from '../../features/mainSlice'
+import { getDashViewSelector, handleForgotPassTurnedOn, handleToPolls, handleSnackBar, resetUserImgStatus, isSignedInSelector, logOut, resetAuthStatus, resetOptionalEmail, resetRegStatus, setDashView, resetProgressForPID } from '../../features/mainSlice'
 import VerticalLinearStepper from '../../features/Utility/forDashBoard2'
 import { TYPE_1, TYPE_2, TYPE_3, TYPE_4, VOTING_MOTIVE } from '../constants'
 import DashBoard from '../dashBoard'
 import { GetBoxNew } from './getBox'
 import '../../App.css'
-import { Snackbar } from '@mui/material'
+import ShowSnackbar from '../../snackBar'
 
 
-
-function TransitionUp(props) {
-  return <Slide {...props} direction="up" />;
-}
 
 function Home() {
-  const sbFlag = useSelector(getSnackBar)
-  const [transition, setTransition] = React.useState(undefined);
-
   const dashView = useSelector(getDashViewSelector)
   const isSignedIn = useSelector(isSignedInSelector)
   const dispatch = useDispatch()
@@ -42,9 +35,9 @@ function Home() {
     </Typography>
   </Grid>
 
-  const typeCharacter = (character, color) => {
+  const typeCharacter = (character, color, variant) => {
     return <Typography
-      variant='h1'
+      variant={variant === null ? 'h1' : variant}
       color={color}
     >
       {character}
@@ -61,7 +54,7 @@ function Home() {
     justifyContent={'center'}
     alignItems={'center'}
     direction={'row'}
-    pt={10}
+    pt={11}
     bgcolor={'background.light'}
   >
     <Grid item
@@ -151,12 +144,11 @@ function Home() {
 
         sx={{
           width: '100%',
-          height: '20%',
           backgroundColor: 'black',
         }}
       >
         <CardHeader
-        
+
           sx={{
             color: 'text.light',
           }}
@@ -168,28 +160,28 @@ function Home() {
         <CardMedia
           component="img"
           sx={{
-            height: '40%'
+            height: 200
           }}
           image={require('./forVRA.webp')}
         />
         <CardContent
           sx={{
             color: 'white',
-            width:'100%'
+            width: '100%'
           }}>
           <Typography gutterBottom variant="h5" component="div">
             Vote for a better future
           </Typography>
           <Grid container
-          direction={'column'}
+            direction={'column'}
             sx={{
-              width:'100%'
+              width: '100%'
             }}
           >
-          {gridTypo('Elections have consequences.', null, 16, null)}
-          {gridTypo('Not voting is giving up your voice.', null, 16, null)}
-          {gridTypo('Voting is an opportunity for change.', null, 16, null)}
-          {gridTypo('The community depends on you!', null, 16, null)}
+            {gridTypo('Elections have consequences.', null, 16, null)}
+            {gridTypo('Not voting is giving up your voice.', null, 16, null)}
+            {gridTypo('Voting is an opportunity for change.', null, 16, null)}
+            {gridTypo('The community depends on you!', null, 16, null)}
           </Grid>
         </CardContent>
       </Card>
@@ -223,11 +215,11 @@ function Home() {
           pb={1}
           direction='row'
         >
-          {typeCharacter('B', 'text.light')}
-          {typeCharacter('B', 'text.light')}
-          {typeCharacter('-', 'text.light')}
-          {typeCharacter('V', 'yellow')}
-          {typeCharacter('S', 'white')}
+          {typeCharacter('B', 'text.light', null)}
+          {typeCharacter('B', 'text.light', null)}
+          {typeCharacter('-', 'text.light', null)}
+          {typeCharacter('V', 'yellow', null)}
+          {typeCharacter('S', 'white', null)}
         </Grid>
         <Grid item container
           mb={4}
@@ -270,7 +262,7 @@ function Home() {
     justifyContent={'center'}
     bgcolor={'background.main'}
   >
-
+    <ShowSnackbar></ShowSnackbar>
     {!isSignedIn && <Grid item>
       <GetBoxNew content={subWrapper}>
       </GetBoxNew>
@@ -303,101 +295,129 @@ function Home() {
     <Grid
       container
       position={'fixed'}
-      justifyContent={'space-between'}
+      justifyContent={'center'}
       alignItems={'center'}
       direction='row'
       padding={3}
       bgcolor={'background.light'}
       color={'text.light'}
     >
+      <Grid item container
+        position={'absolute'}
+        justifyContent={'center'}
+        direction='row'
+        sx={{
+          width: '10%'
+        }}
+      >
+        {typeCharacter('B', 'text.light', 'h4')}
+        {typeCharacter('B', 'text.light', 'h4')}
+        {typeCharacter('-', 'text.light', 'h4')}
+        {typeCharacter('V', 'yellow', 'h4')}
+        {typeCharacter('S', 'white', 'h4')}
 
-      <Grid item>
-        <Box>
-          <Grid container
-          >
-            <PollOutlined fontSize='large' sx={{
-              color: 'red'
-            }} ></PollOutlined>
 
-            {!isSignedIn ? <Button
-              onClick={() => {
-                dispatch(resetOptionalEmail())
-                dispatch(setDashView({ 'dash': 0, 'optionalEmail': ndviewText }))
-              }}
-              endIcon={<HomeOutlined sx={{
-                color: 'yellow'
-              }} />}
+      </Grid>
+      <Grid item container
+        sx={{
+          width: '100%',
+        }}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        direction={'row'}>
+
+        <Grid item
+        >
+          <Box>
+            <Grid container
             >
-              {typo('Home')}
-            </Button>
+              <PollOutlined fontSize='large' sx={{
+                color: 'red'
+              }} ></PollOutlined>
 
-              : <Button
+              {!isSignedIn ? <Button
                 onClick={() => {
-                  dispatch(handleToPolls(false))
+                  dispatch(resetOptionalEmail())
+                  dispatch(setDashView({ 'dash': 0, 'optionalEmail': ndviewText }))
                 }}
-                endIcon={<DashboardOutlined sx={{
-                  color: 'red'
+                endIcon={<HomeOutlined sx={{
+                  color: 'yellow'
                 }} />}
               >
-                {typo('Dashboard')}
-              </Button>}
+                {typo('Home')}
+              </Button>
 
-          </Grid>
-        </Box>
-      </Grid>
-      <Grid item
-      >{!isSignedIn && <Box>
-        <Button
-          sx={{
-            paddingX: 3,
-            color: 'red'
-          }}
-          onClick={() => {
-            dispatch(handleForgotPassTurnedOn(false))
+                : <Button
+                  onClick={() => {
+                    dispatch(handleToPolls(false))
+                  }}
+                  endIcon={<DashboardOutlined sx={{
+                    color: 'red'
+                  }} />}
+                >
+                  {typo('Dashboard')}
+                </Button>}
 
-            dispatch(resetOptionalEmail())
-            dispatch(resetAuthStatus())
-            dispatch(setDashView({ 'dash': 1, 'optionalEmail': null }))
-          }}
-        >
-          Sign In
-        </Button>
-        <Button
-          sx={{
-            color: 'text.light',
-            borderColor: 'text.light'
-          }}
-          variant='outlined'
-          onClick={() => {
-            dispatch(resetOptionalEmail())
-            dispatch(resetRegStatus())
-            dispatch(resetAuthStatus())
-            dispatch(setDashView({ 'dash': 2, 'optionalEmail': null }))
-          }}
-        >
-          Sign Up
-        </Button>
-      </Box>}
-        {isSignedIn && <Box>
+            </Grid>
+          </Box>
+        </Grid>
+
+        <Grid item
+        >{!isSignedIn && <Box>
           <Button
-            variant='outlined'
+            sx={{
+              paddingX: 3,
+              color: 'red'
+            }}
+            onClick={() => {
+              dispatch(handleForgotPassTurnedOn(false))
+
+              dispatch(resetOptionalEmail())
+              dispatch(resetAuthStatus())
+              dispatch(setDashView({ 'dash': 1, 'optionalEmail': null }))
+            }}
+          >
+            Sign In
+          </Button>
+          <Button
             sx={{
               color: 'text.light',
               borderColor: 'text.light'
             }}
+            variant='outlined'
             onClick={() => {
-              dispatch(resetProgressForPID())
-              dispatch(handleToPolls(false))
-              dispatch(setDashView({ dash: 0, optionalEmail: null }))
+              dispatch(resetOptionalEmail())
+              dispatch(resetRegStatus())
               dispatch(resetAuthStatus())
-              dispatch(logOut())
+              dispatch(setDashView({ 'dash': 2, 'optionalEmail': null }))
             }}
           >
-            sign out
+            Sign Up
           </Button>
+        </Box>}
+          {isSignedIn && <Box>
+            <Button
+              variant='outlined'
+              sx={{
+                color: 'text.light',
+                borderColor: 'text.light'
+              }}
+              onClick={() => {
+                dispatch(handleSnackBar('world needs you'))
+                dispatch(resetProgressForPID())
+                dispatch(handleToPolls(false))
+                dispatch(setDashView({ dash: 0, optionalEmail: null }))
+                dispatch(resetAuthStatus())
+                dispatch(resetUserImgStatus())
+                dispatch(logOut())
+              }}
+            >
+              sign out
+            </Button>
 
-        </Box>
-        }
+          </Box>
+          }
+        </Grid>
       </Grid>
     </Grid>
   </Grid>

@@ -1,10 +1,10 @@
-import { ArrowForwardIosOutlined, DownloadDone, Downloading, NotAccessibleRounded, SearchRounded, SourceOutlined } from '@mui/icons-material';
-import { styled, alpha, InputBase, IconButton, Grid, CircularProgress, Button, Card, CardHeader, CardContent, Avatar, Table, TableBody, TableRow, TableCell, CardActions } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import { ArrowForwardIosOutlined, EditOutlined, Downloading, EventAvailableOutlined, NotAccessibleRounded, PresentToAll, SearchRounded, SourceOutlined } from '@mui/icons-material';
+import { styled, alpha, InputBase, IconButton, Grid, CircularProgress, Button, Card, CardHeader, CardContent, Avatar, Table, TableBody, TableRow, TableCell, CardActions, Typography } from '@mui/material';
+import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ShowTable } from '../features/Utility/utility';
-import { getVoterPIDS, selectIsPending, manageAfterSubscribe, pGetPollSelector, pPollStatusSelector, getPoll, handleToPolls } from '../features/mainSlice';
+import { getVoterPIDS, selectIsPending, manageAfterSubscribe, getUserImg, faauiTHUNK, pGetPollSelector, pPollStatusSelector, getPoll, handleToPolls, handleSnackBar } from '../features/mainSlice';
 import { Box } from '@mui/system';
 
 
@@ -45,6 +45,19 @@ const p = (data) => console.log(data)
 
 
 function Voter({ vData }) {
+
+    const gridTypo = (content, p, fs, code) => <Grid item px={p} sx={code === 'm' ? {
+        width: '100%'
+    } : {}}>
+        <Typography
+            variant='h6'
+            fontSize={fs !== null ? fs : 13}
+            fontWeight={400}
+            color={'text.light'}
+        >
+            {content}
+        </Typography>
+    </Grid>
     const getDec = {
         color: '#f2f2f2'
     }
@@ -64,10 +77,43 @@ function Voter({ vData }) {
 
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const inputFileRef = useRef(null)
+    const imageUrl = useSelector(getUserImg)
+
+    const handleImageIconButton = () => {
+        inputFileRef.current.click()
+    }
+
+    const handleImageChange = (e) => {
+        const uploadable = e.target.files[0]
+
+        new Promise((resolve, reject) => {
+            const fr = new FileReader()
+            fr.readAsDataURL(uploadable)
+            fr.onload = () => {
+                resolve(fr.result)
+                let res = fr.result
+                dispatch(faauiTHUNK(JSON.stringify({
+                    type: 'POST',
+                    id: vData['id'],
+                    imageUrl: `${res}`,
+                    person: vData['person']
+                })))
+            }
+            fr.onerror = (error) => {
+                reject(error)
+            }
+        })
+    }
 
     useEffect(() => {
-
+        if (imageUrl === null) {
+            dispatch(faauiTHUNK(JSON.stringify({
+                type: 'GET',
+                id: vData['id'],
+                person: vData['person']
+            })))
+        }
     }, [])
 
     const userInfo = (data) => <Card
@@ -89,36 +135,97 @@ function Voter({ vData }) {
                 backgroundColor: 'background.cardBackground'
             }}
         >
+
             <Grid container
                 justifyContent={'center'}
                 alignItems={'center'}
                 direction={'row'}
             >
-                <Grid item>
-                    <Avatar
-                        component={'div'}
+                <Grid item container
+                    justifyContent={'right'}
+                    sx={{
+                        width: '50%',
+                    }}
+                >
+                    <Grid item
                         sx={{
-                            width: 200,
-                            height: 200,
-                            objectFit: 'cover',
+                            width: '100%',
+                            border: 1,
+                            marginBottom: 2,
+                            borderColor: 'text.light',
                             borderRadius: 4
                         }}
-                        src={require('../images/file.jpg')}
+                        position={'relative'}
                     >
+                        <Avatar
+                            component={'div'}
+                            sx={{
+                                width: '100%',
+                                height: 200,
+                                objectFit: 'cover',
+                                borderRadius: 4,
+                                backgroundColor: 'background.cardBackground',
+                                color: 'black'
+                            }}
+                            src={imageUrl === null ? null : imageUrl}
+                        >
 
 
-                    </Avatar>
+                        </Avatar></Grid>
+                    <Grid item container
+                        sx={{
+                            opacity: 0.4,
+                            width: 200,
+                            height: 200,
+                            backgroundColor: 'black',
+                            borderRadius: 4
+                        }}
+
+                        justifyContent={'right'}
+                        alignItems={'right'}
+                        direction={'row'}
+                        position={'absolute'}
+                    >
+                        <Grid item><IconButton
+                            sx={{
+                            }}
+                            onClick={() => {
+                                handleImageIconButton()
+                            }}
+                        >
+                            <EditOutlined sx={{
+                                color: 'black',
+                                backgroundColor: 'white',
+                                borderRadius: '50%',
+                                padding: 1
+                            }}></EditOutlined>
+                        </IconButton>
+                            <input
+                                multiple={false}
+                                onChange={handleImageChange}
+                                ref={inputFileRef}
+                                style={{
+                                    display: 'none'
+                                }}
+                                type={'file'}></input>
+
+                        </Grid>
+
+                    </Grid>
+
 
                 </Grid>
-                <Grid item
+                <Grid item container
                     sx={{
                         backgroundColor: '#242429',
-                        marginX: 4
+                        marginX: 4,
+                        width: '50%'
                     }}
                 >
                     <Table
                         sx={{
-                            backgroundColor: 'black'
+                            backgroundColor: 'black',
+                            borderRadius: 2
                         }}
                     >
                         <TableBody>
@@ -132,11 +239,11 @@ function Voter({ vData }) {
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={getDec}>Email</TableCell>
-                                <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
+                                <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={getDec}>Contact</TableCell>
-                                <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
+                                <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
                             </TableRow>
 
                         </TableBody>
@@ -157,10 +264,14 @@ function Voter({ vData }) {
                     >
                         {!hFlag
                             ? <IconButton
+                                title={'syncing details'}
                                 variant='outlined'
                                 onClick={() => {
-                                    dispatch(getVoterPIDS(JSON.stringify({ _email: vData.voterId })))
-                                    setHFlag(true)
+                                    if (!isPending) {
+                                        dispatch(getVoterPIDS(JSON.stringify({ _email: vData.voterId })))
+                                        dispatch(handleSnackBar('syncing subscriptions'))
+                                        setHFlag(true)
+                                    }
                                 }}
                             ><Downloading sx={getIconDec}></Downloading>
                             </IconButton>
@@ -200,8 +311,11 @@ function Voter({ vData }) {
                 <Grid item>
 
                     {!hFlag ? <IconButton
+                        title={'search'}
                         onClick={() => {
-                            dispatch(getPoll(JSON.stringify({ '_pid': searchPID, '_vid': vData['voterId'] })))
+                            if (!isPending && searchPID.length === 6) {
+                                dispatch(getPoll(JSON.stringify({ '_pid': searchPID, '_vid': vData['voterId'] })))
+                            }
                         }}
                         sx={getIconDec}
                     >
@@ -211,9 +325,13 @@ function Voter({ vData }) {
 
                     </IconButton> :
                         <IconButton
+                            title={'search'}
                             onClick={() => {
-                                setHFlag(false)
-                                dispatch(getPoll(JSON.stringify({ '_pid': searchPID, '_vid': vData['voterId'] })))
+                                if (!isPending && searchPID.length === 6) {
+                                    setHFlag(false)
+                                    dispatch(getPoll(JSON.stringify({ '_pid': searchPID, '_vid': vData['voterId'] })))
+                                }
+
                             }}
                             sx={getIconDec}
                         >
@@ -258,7 +376,7 @@ function Voter({ vData }) {
                             color: 'red'
                         }}
                     /></Grid>
-                        <Grid item p={2}> No poll exist with this POLL-ID</Grid>
+                        {gridTypo('No poll exist with this POLL-ID', 2, 16, null)}
                     </Grid>}
                     {(pollStatus === 198) && <Grid
                         container
@@ -266,12 +384,12 @@ function Voter({ vData }) {
                         alignItems={'center'}
                         direction={'row'}
                         m={2}
-                    >   <Grid item><NotAccessibleRounded
+                    >   <Grid item><EventAvailableOutlined
                         sx={{
                             color: 'red'
                         }}
                     /></Grid>
-                        <Grid item p={2}> You have already SUBSCRIBED to this POLL</Grid>
+                        {gridTypo('You have already SUBSCRIBED to this POLL', 2, 16, null)}
                     </Grid>}
                 </Grid>}
 

@@ -1,6 +1,6 @@
 
 
-export const VOTING_MOTIVE = "Your vote has the potential to make a significant difference. Your vote has the potential to make a significant difference.  If people do not vote, the same party or people will be in power for another round. Finally, if the country is left with a bad administration, it is the people's fault for voting incorrectly or not at all."
+export const VOTING_MOTIVE = "Your vote has the potential to make a significant difference.  If people do not vote, the same party or people will be in power for another round. Finally, if the country is left with a bad administration, it is the people's fault for voting incorrectly or not at all."
 
 
 

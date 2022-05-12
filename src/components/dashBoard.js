@@ -1,14 +1,14 @@
-import { Add, ArrowBack, ArrowForward, ArrowForwardIosOutlined, Clear, Create, Delete, ExpandLess, ExpandMore, Inbox, ListAltOutlined, Poll, PollOutlined, Sync, SyncAltOutlined } from '@mui/icons-material'
-import { Grid, List, ListItemButton, ListItemIcon, ListSubheader, Paper, ListItemText, Collapse, ListItem, IconButton, TextField, Button, Typography, Slide, Snackbar, CircularProgress, LinearProgress, Box, Card, CardHeader, CardContent, Avatar, CardActions, Table, TableBody, TableCell, TableRow, Divider } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { ArrowForwardIosOutlined, Clear, Create, PollOutlined, EditOutlined, SyncAltOutlined } from '@mui/icons-material'
+import { Grid, Collapse, IconButton, TextField, Button, CircularProgress, LinearProgress, Box, Card, CardHeader, CardContent, Avatar, CardActions, Table, TableBody, TableCell, TableRow, Divider } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { handleToPolls, pollPendingStatus, pollRegStatus, resetPollRegStatus, selectAuthStatus, selectCreatorData, selectIsPending, selectVoterData, shouldNavigate } from '../features/mainSlice'
-import { GetCandidateDetails, GetPolls, getTextField } from '../features/Utility/utility'
-import GetBox, { GetBoxNew, GetBoxNew2 } from './layout-components/getBox'
+import { faauiTHUNK, handleSnackBar, handleToPolls, getUserImg, getUserImgStatus, isUserImgPendingSelector, pollRegStatus, resetPollRegStatus, selectAuthStatus, selectCreatorData, selectIsPending, selectVoterData, shouldNavigate, isSignedInSelector } from '../features/mainSlice'
+import { GetCandidateDetails, GetPolls } from '../features/Utility/utility'
+import { GetBoxNew2 } from './layout-components/getBox'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { addCandidateThunk, addPollDetailsThunk, currentPollId, getPollData, getPollDetailsThunk, turnPidNull } from '../features/mainSlice'
+import { addCandidateThunk, addPollDetailsThunk, currentPollId, getPollDetailsThunk, turnPidNull } from '../features/mainSlice'
 import Voter from './voter'
 import { getUserType } from '../features/mainSlice'
 import PollDetails from './polldetails'
@@ -28,12 +28,12 @@ function DashBoard() {
 
   const dispatch = useDispatch()
   const navigate = useSelector(shouldNavigate)
-  const [startDate, setStartDate] = React.useState(null);
+  const [startDate, setStartDate] = useState(null);
   const [hFlag, setHFlag] = useState(false)
 
-  const [tomorrow, setToday] = React.useState(null)
-  const [endDate, setEndDate] = React.useState(null);
-  const [minEndDate, setMinEndDate] = React.useState(new Date(
+  const [tomorrow, setToday] = useState(null)
+  const [endDate, setEndDate] = useState(null);
+  const [minEndDate, setMinEndDate] = useState(new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
     new Date().getDate() + 2));
@@ -48,17 +48,45 @@ function DashBoard() {
     setDCP(true)
   }
 
-  const [snackOpen, setSnackOpen] = React.useState(false);
-  const [transition, setTransition] = React.useState(undefined);
+  const inputFileRef = useRef(null)
+  const imageUrl = useSelector(getUserImg)
+  const handleImageIconButton = () => {
+    inputFileRef.current.click()
+  }
 
-  const handleSnackClick = (Transition) => () => {
-    setTransition(() => Transition);
-    setSnackOpen(true);
-  };
+  const handleImageChange = (e) => {
+    const uploadable = e.target.files[0]
 
-  const handleClose = () => {
-    setSnackOpen(false);
-  };
+    new Promise((resolve, reject) => {
+      const fr = new FileReader()
+      fr.readAsDataURL(uploadable)
+      fr.onload = () => {
+        resolve(fr.result)
+        let res = fr.result
+        dispatch(faauiTHUNK(JSON.stringify({
+          type: 'POST',
+          id: cData['id'],
+          imageUrl: `${res}`,
+          person: cData['person']
+        })))
+      }
+      fr.onerror = (error) => {
+        reject(error)
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (imageUrl === null) {
+      dispatch(faauiTHUNK(JSON.stringify({
+        type: 'GET',
+        id: cData['id'],
+        person: cData['person']
+      })))
+
+    }
+  }, [])
+
 
   const authStatus = useSelector(selectAuthStatus)
   const userType = useSelector(getUserType)
@@ -66,7 +94,6 @@ function DashBoard() {
   const vData = useSelector(selectVoterData)
   const cData = useSelector(selectCreatorData)
   const isPending = useSelector(selectIsPending)
-  const pollData = useSelector(getPollData)
   const prs = useSelector(pollRegStatus)
   const [candidateList, setCandidateList] = useState([])
   const [candidateName, setCandidateName] = useState(null)
@@ -450,31 +477,92 @@ function DashBoard() {
         alignItems={'center'}
         direction={'row'}
       >
-        <Grid item>
-          <Avatar
-            component={'div'}
+        <Grid item container
+          justifyContent={'right'}
+          sx={{
+            width: '50%',
+          }}
+        >
+          <Grid item
             sx={{
+              width: '100%',
+              border: 1,
+              marginBottom: 2,
+              borderColor: 'text.light',
+              borderRadius: 4
+
+            }}
+            position={'relative'}
+          >
+            <Avatar
+              component={'div'}
+              sx={{
+                width: '100%',
+                height: 200,
+                objectFit: 'cover',
+                borderRadius: 4,
+                backgroundColor: 'background.cardBackground',
+                color: 'black'
+              }}
+              src={imageUrl === null ? null : imageUrl}
+            >
+
+
+            </Avatar></Grid>
+          <Grid item container
+            sx={{
+              opacity: 0.4,
               width: 200,
               height: 200,
-              objectFit: 'cover',
+              backgroundColor: 'black',
               borderRadius: 4
             }}
-            src={require('../images/file.jpg')}
+
+            justifyContent={'right'}
+            alignItems={'right'}
+            direction={'row'}
+            position={'absolute'}
           >
+            <Grid item><IconButton
+              sx={{
+              }}
+              onClick={() => {
+                handleImageIconButton()
+              }}
+            >
+              <EditOutlined sx={{
+                color: 'black',
+                backgroundColor: 'white',
+                borderRadius: '50%',
+                padding: 1
+              }}></EditOutlined>
+            </IconButton>
+              <input
+                multiple={false}
+                onChange={handleImageChange}
+                ref={inputFileRef}
+                style={{
+                  display: 'none'
+                }}
+                type={'file'}></input>
 
+            </Grid>
 
-          </Avatar>
+          </Grid>
+
 
         </Grid>
-        <Grid item
+        <Grid item container
           sx={{
             backgroundColor: '#242429',
-            marginX: 4
+            marginX: 4,
+            width: '50%'
           }}
         >
           <Table
             sx={{
-              backgroundColor: 'black'
+              backgroundColor: 'black',
+              borderRadius: 2
             }}
           >
             <TableBody>
@@ -488,7 +576,7 @@ function DashBoard() {
               </TableRow>
               <TableRow>
                 <TableCell sx={getDec}>Email</TableCell>
-                <TableCell sx={getDec}>{`${data[1]}`}</TableCell> 
+                <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={getDec}>Contact</TableCell>
@@ -518,6 +606,7 @@ function DashBoard() {
                 if (isPending != true) {
                   setOpen(true)
                   setOpenPolls(true)
+                  dispatch(handleSnackBar('updating details'))
                   dispatch(getPollDetailsThunk(JSON.stringify({ '_email': cData[1] })))
                 }
                 setHFlag(true)
@@ -544,11 +633,12 @@ function DashBoard() {
         </Grid>
       </Grid>
       <IconButton
-        title={'create poll'}
+        title={open ? 'create poll' : 'close'}
         onClick={() => {
           if (!isPending) {
             setOpenPolls(true)
             dispatch(resetPollRegStatus())
+            open && dispatch(handleSnackBar('Create a Poll, by filling necessary details'))
             handleClick()
             setHFlag(false)
 
@@ -556,9 +646,10 @@ function DashBoard() {
         }}
       >{open ? <Create sx={getIconDec} /> : <Clear sx={getIconDec}></Clear>}</IconButton>
       <IconButton
-        title={'polls'}
+        title={openPolls ? 'polls' : 'close'}
         onClick={() => {
           if (!isPending) {
+            openPolls && dispatch(handleSnackBar('fetching your polls'))
             setOpen(true)
             handleOpenPolls()
             setHFlag(false)

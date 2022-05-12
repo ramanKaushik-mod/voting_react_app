@@ -1,50 +1,36 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import { getMsg, getSnackBar, resetSnackBar } from './features/mainSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import MuiAlert from '@mui/material/Alert';
 
-export default function SimpleSnackbar({message}) {
-  const [open, setOpen] = React.useState(false);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={10} ref={ref} variant="filled" {...props} />;
+});
 
+
+export default function ShowSnackbar() {
+  const msg = useSelector(getMsg)
+  const snack = useSelector(getSnackBar)
+  const dispatch = useDispatch()
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
-    setOpen(false);
+    dispatch(resetSnackBar())
   };
 
-  const action = (
-    <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
   return (
-    <div>
-      <Button onClick={handleClick}>Open simple snackbar</Button>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message={message}
-        action={action}
-      />
-    </div>
+    <Snackbar
+      severity="success"
+      open={snack}
+      autoHideDuration={2000}
+      onClose={handleClose}
+    >
+      <Alert onClose={handleClose} severity={'info'} sx={{ width: '100%' }}>
+        {msg}
+      </Alert>
+    </Snackbar>
   );
 }

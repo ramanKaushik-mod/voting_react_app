@@ -7,10 +7,22 @@ import { Chart as chartjs } from "chart.js/auto";
 import { Bar } from 'react-chartjs-2'
 import { useSelector, useDispatch } from 'react-redux'
 import { PollData } from '../features/Utility/utility'
-import { gpdfvArrSelector, selectVoterData, selectIsPending, gpdfvTHUNK, gVPIDSSelector, votingTHUNK, handleToPolls, getProgressForPID, handleProgressForPID } from '../features/mainSlice'
+import { gpdfvArrSelector, selectVoterData, selectIsPending, gpdfvTHUNK, gVPIDSSelector, votingTHUNK, handleToPolls, getProgressForPID, handleProgressForPID, handleSnackBar } from '../features/mainSlice'
 
+const isActiveOrNot = (startDate, endDate) => {
+    startDate = new Date(`${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()}/${new Date(startDate).getFullYear()}`)
+    endDate = new Date(`${new Date(endDate).getMonth() + 1}/${new Date(endDate).getDate()}/${new Date(endDate).getFullYear()}`)
 
-function VoteSection({ cArr, vID, pID, refresh }) {
+    if (((new Date(startDate) <= new Date()) && (new Date(endDate) > new Date())) || ((new Date(startDate) < new Date()) && (new Date(endDate) >= new Date()))) {
+        return 'Active'
+    } else if (new Date(startDate) > new Date()) {
+        return 'Will Active Soon'
+    } else if (new Date(endDate) < new Date()) {
+        return 'Closed'
+    }
+}
+
+function VoteSection({ cArr, vID, pID, refresh, eD, sD }) {
 
     const getDec = {
         color: 'text.light',
@@ -103,9 +115,10 @@ function VoteSection({ cArr, vID, pID, refresh }) {
             </Grid>
             <Grid item>
                 {(!isPending && progressForPID !== pID) ? <Button
-                    disabled={candidateId === '' ? true : false}
+                    disabled={candidateId === '' || isActiveOrNot(new Date(sD), new Date(eD)) !== 'Active' ? true : false}
                     variant='outlined'
                     onClick={() => {
+                        dispatch(handleSnackBar('voting in progress'))
                         dispatch(handleProgressForPID(pID))
                         dispatch(votingTHUNK(JSON.stringify({ '_vid': vID, '_pid': pID, '_cid': candidateId })))
                         refresh()
@@ -162,8 +175,8 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
                         <PollData deepInfo={pollInfo} />
                     </Grid>
                     <Grid item>
-                        {!vsov
-                            ? <VoteSection cArr={cArr} pID={pollInfo.pollId} vID={vID} refresh={refresh} />
+                        {isActiveOrNot(new Date(pollInfo['startdate']), new Date(pollInfo['enddate'])) === 'Active'?(!vsov
+                            ? <VoteSection cArr={cArr} pID={pollInfo.pollId} vID={vID} refresh={refresh} sD={pollInfo['startdate']} eD={pollInfo['enddate']} />
                             : <Grid item container
                                 justifyContent={'center'}
                                 alignItems={'center'}
@@ -186,7 +199,7 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
                                     {`${'you have already voted for this poll'.toUpperCase()}`}
                                 </Typography>
 
-                            </Grid>}
+                            </Grid>):<Box></Box>}
                     </Grid>
                 </Grid>
             </Grid>
@@ -194,7 +207,7 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
 
                 sx={{ width: '50%', }}>
                 <Box
-                    bgcolor={'background.light'}
+                    bgcolor={'background.chartColor'}
                     p={2}
                     borderRadius={2}
                 >
@@ -271,6 +284,7 @@ export default function VoterSubscriptions() {
                         }}
                     >
                         {!isPending ? <IconButton
+                            title={'refresh dashboard'}
                             onClick={() => {
                                 if (!isPending) {
                                     setRefresh(!refresh)
@@ -285,7 +299,7 @@ export default function VoterSubscriptions() {
                         </Typography>}
 
                         <IconButton
-                            title={'show my polls'}
+                            title={'back to dashboard'}
                             onClick={() => {
                                 //::::::::::::::::::::::::::::::::::: DISPATCH 
                                 dispatch(handleToPolls(false))

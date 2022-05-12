@@ -11,7 +11,7 @@ import {
   selectAuthStatus,
   getForgotPassStatus,
   getForgotPassPending,
-  selectIsPending, forgotCPassTHUNK, forgotVPassTHUNK
+  selectIsPending, forgotCPassTHUNK, forgotVPassTHUNK, handleSnackBar
 } from '../mainSlice'
 import { AppRegistrationRounded, ArrowBackIos, Login, LoginRounded, ResetTvRounded } from '@mui/icons-material'
 import { logIn, resetAuthStatus, setDashView } from '../mainSlice'
@@ -55,14 +55,14 @@ function SignIn() {
       "key": 0,
       "label": "Email",
       "ph": "xxxxxxxx@domain.com",
-      "ip": { inputMode: 'email', pattern: /\w+@+\w+\.+[a-z]/ },
+      "ip": { inputMode: 'email', pattern: /([a-z A-Z])+([0-9])*\@([a-z])+\.(com)/ },
       "handler": emailHandler,
       c: ''
     }, {
       "key": 2,
       "label": "Password",
       "ph": "xxxxxxxx",
-      "ip": { inputMode: 'password', pattern: '' },
+      "ip": { inputMode: 'password', pattern: /w+/ },
       "handler": passHandler
     }
   ]
@@ -72,22 +72,22 @@ function SignIn() {
       "key": 0,
       "label": "Email",
       "ph": "xxxxxxxx@domain.com",
-      "ip": { inputMode: 'email', pattern: /\w+@+\w+\.+[a-z]/ },
+      "ip": { inputMode: 'email', pattern: '([a-z A-Z])+([0-9])*\@([a-z])+\.(com)' },
       "handler": emailHandler,
       c: ''
     },
     {
       "key": 1,
       "label": "UID",
-      "ph": "Enter your 8 digit UID",
-      "ip": { inputMode: 'number', pattern: '' },
+      "ph": "Enter your UID",
+      "ip": { inputMode: 'number', pattern: /w+/ },
       "handler": idHandler,
       c: ''
     }, {
       "key": 2,
       "label": "New Password",
       "ph": "xxxxxxxx",
-      "ip": { inputMode: 'Enter new password', pattern: '' },
+      "ip": { inputMode: 'password', pattern: /w+/ },
       "handler": passHandler
     }
   ]
@@ -149,11 +149,10 @@ function SignIn() {
                 color: 'text.light'
               }}
             >
-
               {authStatus === 151 && "Wrong password, if forgotten - reset it now"}
               {authStatus === 190 && "No account registered with this email, Create a new one."}
               {authStatus === 404 && "Something went wrong"}
-              {fStatus === 190 && forgotPassTurnedOn && 'No account registered with this email, Create a new one.'}
+              {fStatus === 190 && forgotPassTurnedOn && 'Invalid Information, Create a new account.'}
               {fStatus === 200 && forgotPassTurnedOn && 'Your password has been resetted now, you can sign in.'}
             </CardContent>
             {authStatus === 151 && <CardActions
@@ -259,6 +258,7 @@ function SignIn() {
           {forgotPassTurnedOn && <Button
             onClick={() => {
               dispatch(handleForgotPassTurnedOn(false))
+              dispatch(resetAuthStatus())
             }}
             sx={{
               color: 'text.light',
@@ -272,7 +272,20 @@ function SignIn() {
           {!forgotPassTurnedOn && (!isPending ?
             <Button
               onClick={(e) => {
-                e.preventDefault()
+
+                if (`${email}`.search(/([a-z A-Z])+([0-9])*\@([a-z])+\.(com)/) === -1) {
+                  dispatch(handleSnackBar('Enter a valid email address'))
+                  return
+                }
+                if (password.length <= 5) {
+                  dispatch(handleSnackBar('password must be 6 characters long'))
+                  return
+                }
+                if(person === null){
+                  dispatch(handleSnackBar('choose your type'))
+                  return
+                }
+
                 let data = {
                   "_password": password,
                   "_email": email
@@ -314,8 +327,26 @@ function SignIn() {
 
             }}
             onClick={() => {
+              dispatch(resetAuthStatus())
               dispatch(handleForgotPassTurnedOn(true))
               if (forgotPassTurnedOn) {
+
+                if (`${email}`.search(/([a-z A-Z])+([0-9])*\@([a-z])+\.(com)/) === -1) {
+                  dispatch(handleSnackBar('Enter a valid email address'))
+                  return
+                }
+                if(uid.length !== 8){
+                  dispatch(handleSnackBar('Enter your 8 digit UID'))
+                  return
+                }
+                if (password.length <= 5) {
+                  dispatch(handleSnackBar('password must be 6 characters long'))
+                  return
+                }
+                if(person === null){
+                  dispatch(handleSnackBar('choose your type'))
+                  return
+                }
                 if (person === 'c') {
                   dispatch(forgotCPassTHUNK(JSON.stringify({ _email: email, _id: uid, _newPasscode: password })))
                 } else if (person === 'v') {

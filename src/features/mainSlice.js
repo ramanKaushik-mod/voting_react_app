@@ -279,6 +279,22 @@ export const forgotVPassTHUNK = createAsyncThunk(
     }
 )
 
+export const faauiTHUNK = createAsyncThunk(
+    'main/fetchAndAddUserImage',
+    async (stringifiedData) => {
+        return await fetch(getEndPoint('up'), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: stringifiedData
+        }).then(res => {
+            return res.json()
+        })
+    }
+)
+
 
 const initialState = {
     progressForPID: '',
@@ -334,7 +350,12 @@ const initialState = {
     forgotPassPending: false,
     forgotPassStatus: 0,
 
-    sSnack:false
+    userImg: null,
+    userImgStatus: 0,
+    isUserImgPending: false,
+
+    sSnack: false,
+    message: ''
 }
 
 
@@ -397,7 +418,16 @@ const mainSlice = createSlice({
             state.forgotPassStatus = 0
         },
         handleSnackBar: (state, action) => {
-            state.sSnack = action.payload
+            state.message = action.payload
+            state.sSnack = true
+        },
+        resetSnackBar: (state) => {
+            state.sSnack = false
+            state.message = ''
+        },
+        resetUserImgStatus: (state) => {
+            state.userImgStatus = 0
+            state.userImg = null
         }
 
     },
@@ -652,6 +682,21 @@ const mainSlice = createSlice({
                 state.forgotPassStatus = action.payload.res
                 state.forgotPassPending = false
                 state.error = true
+            })      // updating Voter passcode
+            .addCase(faauiTHUNK.pending, (state) => {
+                state.isUserImgPending = true
+            })
+            .addCase(faauiTHUNK.fulfilled, (state,action) =>{
+                state.userImgStatus = action.payload.res
+                if(state.userImgStatus === 200) {
+                    state.userImg = action.payload.data
+                }
+                state.isUserImgPending = false
+            })
+            .addCase(faauiTHUNK.rejected, (state, action) =>{
+                state.userImgStatus = action.payload.res
+                state.isUserImgPending = false
+                state.error = true
             })
     }
 })
@@ -720,6 +765,11 @@ export const getForgotPassStatus = (state) => state.main.forgotPassStatus
 export const getForgotPassPending = (state) => state.main.forgotPassPending
 
 export const getSnackBar = (state) => state.main.sSnack
+export const getMsg = (state) => state.main.message
+
+export const getUserImg = (state) => state.main.userImg
+export const getUserImgStatus = (state) => state.main.userImgStatus
+export const isUserImgPendingSelector = (state) => state.main.isUserImgPending
 // A C T I O N  C R E A T O R S
 
 
@@ -737,7 +787,9 @@ export const {
     resetProgressForPID,
     resetOptionalEmail,
     handleForgotPassTurnedOn,
-    handleSnackBar
+    handleSnackBar,
+    resetSnackBar,
+    resetUserImgStatus
 } = mainSlice.actions
 
 

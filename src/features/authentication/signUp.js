@@ -4,7 +4,7 @@ import { Avatar, Card, Grid, Paper, Typography, TextField, CardMedia, Button, Fo
 import { React, useState } from 'react'
 import GetBox, { GetBoxNew2 } from '../../components/layout-components/getBox'
 import { useDispatch, useSelector } from 'react-redux'
-import { addCreatorThunk, addVoterThunk, getOptionalEmail, resetRegStatus, resetStateAfterSignInClick, setDashView } from '../mainSlice'
+import { addCreatorThunk, addVoterThunk, getOptionalEmail, handleSnackBar, resetRegStatus, resetStateAfterSignInClick, setDashView } from '../mainSlice'
 
 import { selectRegStatus, selectRegSuccess, selectIsPending } from '../mainSlice'
 import { useNavigate } from 'react-router-dom'
@@ -83,7 +83,7 @@ function SignUp() {
   const signUpForm = <Card
     sx={{
       backgroundColor: 'background.cardBackground',
-      paddingBottom:5
+      paddingBottom: 5
     }}>
 
     <CardHeader
@@ -207,18 +207,48 @@ function SignUp() {
 
               onClick={() => {
 
+                if (name.length < 3) {
+                  dispatch(handleSnackBar('Enter your name, must be of 3 or more characters'))
+                  return
+                }
+                if (`${email}`.search(/([a-z A-Z])+([0-9])*\@([a-z])+\.(com)/) === -1) {
+                  dispatch(handleSnackBar('Enter a valid email address'))
+                  return
+                }
+
+                if (contact.length !== 10) {
+                  dispatch(handleSnackBar('enter a valid 10-digit number'))
+                  return
+                }
+
+                if (password.length <= 5) {
+                  dispatch(handleSnackBar('password must be 6 characters long'))
+                  return
+                }
+                if (password !== cPassword) {
+                  dispatch(handleSnackBar('confirm your password again, you might have fill it wrong'))
+                  return
+                }
+                if(!ageFlag){
+                  dispatch(handleSnackBar('confirm your age'))
+                  return
+                }
+                if(person === null){
+                  dispatch(handleSnackBar('choose your type'))
+                  return
+                }
                 if (ageFlag && password === cPassword && password.length >= 4) {
 
                   let data = {
                     "_password": password,
                     "_name": name,
                     "_contact": contact,
-                    "_email": email === null ? optionalEmail : email
+                    "_email": email === "" ? optionalEmail : email
                   }
 
                   if (person === 'c') {
                     dispatch(addCreatorThunk(JSON.stringify(data)))
-                  } else {
+                  } else if(person === 'v'){
                     dispatch(addVoterThunk(JSON.stringify(data)))
                   }
                 }
@@ -239,49 +269,6 @@ function SignUp() {
     </CardActions>
   </Card>
 
-  const onSuccessView = <Grid
-    container
-    justifyContent={'center'}
-    alignItems={'center'}
-    direction={'column'}
-  >
-    <Grid item>
-      <Typography>
-        {regStatus === 200
-          ? 'Registration Successfull'
-          : regStatus === 198
-            ? `${person === 'c' ? 'creator' : 'voter'} already exist, Try with new ID`
-            : regStatus === 404
-              ? 'Server Error'
-              : ''}
-      </Typography>
-    </Grid>
-    <Grid container
-      item
-      justifyContent={'center'}
-      alignItems={'center'}
-    >
-      <Typography>
-        You can
-      </Typography>
-      <Button
-        type='submit'
-        onClick={
-          () => {
-            if (regStatus === 200) {
-              navigate('/signIn')
-            }
-          }
-        }
-      >
-        {regStatus === 200 ? 'Sign In' : 'Sign Up'}
-      </Button>
-
-      <Typography>
-        now.
-      </Typography>
-    </Grid>
-  </Grid>
   return (
     <Box
       pt={10}
