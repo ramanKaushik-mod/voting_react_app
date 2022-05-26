@@ -78,11 +78,20 @@ function DashBoard() {
 
   useEffect(() => {
     if (imageUrl === null) {
-      dispatch(faauiTHUNK(JSON.stringify({
-        type: 'GET',
-        id: cData['id'],
-        person: cData['person']
-      })))
+      if (userType === 'c') {
+        dispatch(faauiTHUNK(JSON.stringify({
+          type: 'GET',
+          id: cData['id'],
+          person: cData['person']
+        })))
+      } else if (userType === 'v') {
+
+        dispatch(faauiTHUNK(JSON.stringify({
+          type: 'GET',
+          id: vData['id'],
+          person: vData['person']
+        })))
+      }
 
     }
   }, [])

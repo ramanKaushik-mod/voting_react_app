@@ -1,9 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { Box, Grid, Stack, Card, CardContent, CardMedia, CardActions } from '@mui/material/';
-import { AddBoxRounded, Circle, RadioButtonChecked } from '@mui/icons-material'
+import React from 'react';
+import { Box, Grid } from '@mui/material/';
+import { CircleOutlined } from '@mui/icons-material'
 import 'aos/dist/aos.css'
-import ReactPlayer from 'react-player';
-import { VOTING_MOTIVE } from '../../components/constants';
 
 export default function VerticalLinearStepper() {
     return (
@@ -28,21 +26,22 @@ export default function VerticalLinearStepper() {
                         width: '5%'
                     }}
                 >
-                    <RadioButtonChecked sx={{
-                        color: 'white'
+                    <CircleOutlined sx={{
+                        color: 'background.cardBackground'
                     }} />
                     <Box
 
                         sx={{
                             height: '95%',
                             width: 2,
-                            backgroundColor: 'white'
+                            backgroundColor: 'background.cardBackground'
                         }}
                     />
                 </Grid>
                 <Grid item container
                     data-aos={'fade-up'}
                     bgcolor={'transparent'}
+                    direction={'row'}
                     py={10}
                     sx={{
                         width: '90%'
@@ -51,17 +50,29 @@ export default function VerticalLinearStepper() {
                         position={'relative'}
                         ml={-10}
                     >
-                        <Box 
+                        <Box
                             height={600}
                             width={600}
                             bgcolor={'white'}
                             borderRadius={'50%'}
-                boxShadow={'0 0 50px yellow'}
+                            boxShadow={'0 0 50px #490064'}
                         />
                     </Grid>
-                    
+                    <Grid
+                        position={'relative'}
+                        ml={-10}
+                    >
+                        <Box
+                            height={300}
+                            width={500}
+                            bgcolor={'white'}
+                            borderRadius={'50%'}
+                            boxShadow={'0 0 50px green'}
+                        />
+                    </Grid>
+
                     <Grid item
-                    position={'absolute'}
+                        position={'absolute'}
                         ml={-10}
                     >
                         <video loop autoPlay muted style={{

@@ -93,6 +93,7 @@ function SignIn() {
   ]
 
   const signInForm = <Card
+  elevation={10}
     sx={{
       backgroundColor: 'background.cardBackground',
     }}
@@ -131,8 +132,9 @@ function SignIn() {
             width: '30%',
           }}>
           <Card
+          elevation={10}
             sx={{
-              backgroundColor: 'background.main',
+              backgroundColor: 'background.cardBackground',
               borderRadius: 2
             }}
           >
@@ -145,7 +147,7 @@ function SignIn() {
             </CardHeader>
             <CardContent
               sx={{
-                backgroundColor: 'background.main',
+                backgroundColor: 'background.cardBackground',
                 color: 'text.light'
               }}
             >
@@ -172,7 +174,7 @@ function SignIn() {
 
             }{authStatus === 190 && <CardActions
               sx={{
-                backgroundColor: "background.light"
+                backgroundColor: "background.black"
               }}
             >
               <IconButton
@@ -187,7 +189,7 @@ function SignIn() {
             }
             {fStatus === 190 && forgotPassTurnedOn && <CardActions
               sx={{
-                backgroundColor: "background.light"
+                backgroundColor: "background.black"
               }}
             >
               <IconButton
@@ -203,7 +205,7 @@ function SignIn() {
             }
             {fStatus === 200 && forgotPassTurnedOn && <CardActions
               sx={{
-                backgroundColor: "background.light"
+                backgroundColor: "background.black"
               }}
             >
               <IconButton
@@ -242,7 +244,7 @@ function SignIn() {
           >
             <FormControlLabel sx={{
               backgroundColor: 'background.light',
-              color: 'text.light',
+              color: 'text.accent',
               borderRadius: 2,
               paddingRight: 2
             }} value="c" control={<Radio sx={{
@@ -366,10 +368,10 @@ function SignIn() {
 
   return (
     <Box
-      pt={10}
+      mt={14}
       sx={{
         width: '100%',
-        backgroundColor: 'background.main'
+        backgroundColor: 'background.cardBackground'
       }}>
       <Grid container
         sx={{

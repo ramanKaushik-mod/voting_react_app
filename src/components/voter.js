@@ -106,17 +106,8 @@ function Voter({ vData }) {
         })
     }
 
-    useEffect(() => {
-        if (imageUrl === null) {
-            dispatch(faauiTHUNK(JSON.stringify({
-                type: 'GET',
-                id: vData['id'],
-                person: vData['person']
-            })))
-        }
-    }, [])
-
     const userInfo = (data) => <Card
+        elevation={10}
         sx={{
             backgroundColor: 'background.cardBackground',
         }}>
@@ -366,11 +357,14 @@ function Voter({ vData }) {
                     justifyContent={'center'}>
                     {(pollStatus === 200) && <ShowTable data={pollData} email={vData.voterId} />}
                     {(pollStatus === 190) && <Grid
+                    bgcolor={'background.cardBackground'}
                         container
                         justifyContent={'center'}
                         alignItems={'center'}
                         direction={'row'}
-                        m={2}
+                        mt={2}
+                        p={2}
+                        borderRadius={1}
                     >   <Grid item><NotAccessibleRounded
                         sx={{
                             color: 'red'

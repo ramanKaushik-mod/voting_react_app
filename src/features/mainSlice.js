@@ -10,19 +10,45 @@ const p = (data) => console.log(data)
 
 //SignUp thunks
 
+// await checkServerStatus().then(async (res) => {
+//     let data = await res.json()
+//     if(data.res === 200){
+
+//     }else{
+
+//     }
+// })
+
+const checkServerStatus = async () => {
+    return await fetch(getEndPoint('check'), {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
 
 export const addCreatorThunk = createAsyncThunk(
     'main/addCreator',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('creatorSignUp'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then((res) => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('creatorSignUp'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then((res) => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
     }
 )
@@ -30,15 +56,23 @@ export const addCreatorThunk = createAsyncThunk(
 export const getCreatorThunk = createAsyncThunk(
     'main/getCreator',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('creatorSignIn'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then((res) => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+
+                return await fetch(getEndPoint('creatorSignIn'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then((res) => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
     }
 )
@@ -49,15 +83,23 @@ export const getCreatorThunk = createAsyncThunk(
 export const addVoterThunk = createAsyncThunk(
     'main/addVoter',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('voterSignUp'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('voterSignUp'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
     }
 )
@@ -65,15 +107,22 @@ export const addVoterThunk = createAsyncThunk(
 export const getVoterThunk = createAsyncThunk(
     'main/getVoter',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('voterSignIn'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('voterSignIn'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
     }
 )
@@ -82,66 +131,97 @@ export const getVoterThunk = createAsyncThunk(
 
 
 export const addPollDetailsThunk = createAsyncThunk(
-    'poll/addPollDetails',
+    'main/addPollDetails',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('addPIDs'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('addPIDs'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
     }
 )
 
 export const addCandidateThunk = createAsyncThunk(
-    'poll/addCandidate',
+    'main/addCandidate',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('addCandidate'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('addCandidate'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 export const getPollDetailsThunk = createAsyncThunk(
-    'poll/getPollDetails',
+    'main/getPollDetails',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('getPollDetails'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('getPollDetails'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
     }
 )
 
 
 export const getVSPS_THUNK = createAsyncThunk(
-    'poll/getVSPS',
+    'main/getVSPS',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('vsps2'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('vsps2'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
@@ -149,98 +229,145 @@ export const getVSPS_THUNK = createAsyncThunk(
 // voter thunks
 
 export const getGlobalPIDSList = createAsyncThunk(
-    'voter/getGlobalPIDS',
+    'main/getGlobalPIDS',
     async () => {
-        return await fetch(getEndPoint('gGPIDS'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+
+                return await fetch(getEndPoint('gGPIDS'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
     }
 )
 
 export const getVoterPIDS = createAsyncThunk(
-    'voter/getVoterPIDS',
+    'main/getVoterPIDS',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('gVPIDS'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('gVPIDS'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
 export const addVoterPIDS = createAsyncThunk(
-    'voter/addVoterPIDs',
+    'main/addVoterPIDs',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('addVPIDs'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('addVPIDs'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
-
     }
 )
 
 export const getPoll = createAsyncThunk(
-    'voter/getPoll',
+    'main/getPoll',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('poll'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('poll'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
 export const gpdfvTHUNK = createAsyncThunk(
-    'voter/gpdfvTHUNK',
+    'main/gpdfvTHUNK',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('gpdfv'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('gpdfv'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
 export const votingTHUNK = createAsyncThunk(
-    'voter/votingTHUNK',
+    'main/votingTHUNK',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('voting'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('voting'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
@@ -250,48 +377,72 @@ export const votingTHUNK = createAsyncThunk(
 export const forgotCPassTHUNK = createAsyncThunk(
     'main/forgotCPassTHUNK',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('ucp'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('ucp'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
 export const forgotVPassTHUNK = createAsyncThunk(
     'main/forgotVPassTHUNK',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('uvp'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('uvp'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
 export const faauiTHUNK = createAsyncThunk(
     'main/fetchAndAddUserImage',
     async (stringifiedData) => {
-        return await fetch(getEndPoint('up'), {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: stringifiedData
-        }).then(res => {
-            return res.json()
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('up'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then(res => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
         })
+
     }
 )
 
@@ -355,7 +506,8 @@ const initialState = {
     isUserImgPending: false,
 
     sSnack: false,
-    message: ''
+    message: '',
+    theme: false
 }
 
 
@@ -363,6 +515,9 @@ const mainSlice = createSlice({
     name: 'main',
     initialState: initialState,
     reducers: {
+        handleTheme: (state) => {
+            state.theme = !state.theme
+        },
         logIn: (state) => {
             state.isSignedIn = true
         },
@@ -428,6 +583,9 @@ const mainSlice = createSlice({
         resetUserImgStatus: (state) => {
             state.userImgStatus = 0
             state.userImg = null
+        },
+        resetEverything: (state) => {
+            state.error = false
         }
 
     },
@@ -442,7 +600,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             })
             .addCase(addCreatorThunk.rejected, (state, action) => {
-                state.regStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // Handling Creators Signup above
@@ -463,7 +620,6 @@ const mainSlice = createSlice({
 
             })
             .addCase(getCreatorThunk.rejected, (state, action) => {
-                state.authStatus = action.payload.res
                 state.isPending = false
                 state.error = true
 
@@ -477,7 +633,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             })
             .addCase(addVoterThunk.rejected, (state, action) => {
-                state.regStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // Handling Voter SignUp above
@@ -498,7 +653,6 @@ const mainSlice = createSlice({
 
             })
             .addCase(getVoterThunk.rejected, (state, action) => {
-                state.authStatus = action.payload.res
                 state.isPending = false
                 state.error = true
 
@@ -513,7 +667,6 @@ const mainSlice = createSlice({
                 }
                 state.isPending = false
             }).addCase(addPollDetailsThunk.rejected, (state, action) => {
-                state.pollRegStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // registering poll details above
@@ -525,7 +678,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             })
             .addCase(addCandidateThunk.rejected, (state, action) => {
-                state.candidateStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // registering candidates to the poll
@@ -543,7 +695,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             })
             .addCase(getPollDetailsThunk.rejected, (state, action) => {
-                state.pollDetailsStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // getting polls data
@@ -561,7 +712,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             })
             .addCase(getVSPS_THUNK.rejected, (state, action) => {
-                state.vspsStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // vote status poll snapshot handled above
@@ -578,7 +728,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             })
             .addCase(getGlobalPIDSList.rejected, (state, action) => {
-                state.gGPIDSstatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // global PID list is fetched or handled above
@@ -595,7 +744,6 @@ const mainSlice = createSlice({
             }).
             addCase(getVoterPIDS.rejected, (state, action) => {
                 state.isPending = false
-                state.gVPIDSstatus = action.payload.res
                 state.error = true
 
             })      // voter specific PID list is fetched or handled above
@@ -608,7 +756,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             }).
             addCase(addVoterPIDS.rejected, (state, action) => {
-                state.addPIDStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // pid will get added to voter section
@@ -625,7 +772,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             }).
             addCase(getPoll.rejected, (state, action) => {
-                state.pollStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })      // getting poll details
@@ -643,7 +789,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             }).
             addCase(gpdfvTHUNK.rejected, (state, action) => {
-                state.gpdfv = action.res
                 state.isPending = false
                 state.error = true
             })      // getting poll data for voter
@@ -656,7 +801,6 @@ const mainSlice = createSlice({
                 state.isPending = false
             }).
             addCase(votingTHUNK.rejected, (state, action) => {
-                state.voteStatus = action.payload.res
                 state.isPending = false
                 state.error = true
             })  // voting now
@@ -667,7 +811,6 @@ const mainSlice = createSlice({
                 state.forgotPassStatus = action.payload.res
                 state.forgotPassPending = false
             }).addCase(forgotCPassTHUNK.rejected, (state, action) => {
-                state.forgotPassStatus = action.payload.res
                 state.forgotPassPending = false
                 state.error = true
             })  // updating Creator passcode
@@ -679,22 +822,20 @@ const mainSlice = createSlice({
                 state.forgotPassStatus = action.payload.res
                 state.forgotPassPending = false
             }).addCase(forgotVPassTHUNK.rejected, (state, action) => {
-                state.forgotPassStatus = action.payload.res
                 state.forgotPassPending = false
                 state.error = true
             })      // updating Voter passcode
             .addCase(faauiTHUNK.pending, (state) => {
                 state.isUserImgPending = true
             })
-            .addCase(faauiTHUNK.fulfilled, (state,action) =>{
+            .addCase(faauiTHUNK.fulfilled, (state, action) => {
                 state.userImgStatus = action.payload.res
-                if(state.userImgStatus === 200) {
+                if (state.userImgStatus === 200) {
                     state.userImg = action.payload.data
                 }
                 state.isUserImgPending = false
             })
-            .addCase(faauiTHUNK.rejected, (state, action) =>{
-                state.userImgStatus = action.payload.res
+            .addCase(faauiTHUNK.rejected, (state, action) => {
                 state.isUserImgPending = false
                 state.error = true
             })
@@ -770,6 +911,9 @@ export const getMsg = (state) => state.main.message
 export const getUserImg = (state) => state.main.userImg
 export const getUserImgStatus = (state) => state.main.userImgStatus
 export const isUserImgPendingSelector = (state) => state.main.isUserImgPending
+
+export const getTheme = (state) => state.main.theme
+
 // A C T I O N  C R E A T O R S
 
 
@@ -789,7 +933,7 @@ export const {
     handleForgotPassTurnedOn,
     handleSnackBar,
     resetSnackBar,
-    resetUserImgStatus
+    resetUserImgStatus, handleTheme, resetEverything
 } = mainSlice.actions
 
 

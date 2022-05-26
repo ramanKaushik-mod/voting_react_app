@@ -81,6 +81,7 @@ function SignUp() {
   },]
 
   const signUpForm = <Card
+  elevation={10}
     sx={{
       backgroundColor: 'background.cardBackground',
       paddingBottom: 5
@@ -112,8 +113,9 @@ function SignUp() {
             width: '30%',
           }}>
           <Card
+          elevation={10}
             sx={{
-              backgroundColor: 'background.main',
+              backgroundColor: 'background.cardBackground',
               borderRadius: 2
             }}
           >
@@ -126,8 +128,8 @@ function SignUp() {
             </CardHeader>
             <CardContent
               sx={{
-                backgroundColor: 'background.main',
-                color: 'text.purple'
+                backgroundColor: 'background.cardBackground',
+                color: 'text.light'
               }}
             >
 
@@ -137,7 +139,7 @@ function SignUp() {
             </CardContent>
             {regStatus !== 404 && <CardActions
               sx={{
-                backgroundColor: 'background.light'
+                backgroundColor: 'background.black'
               }}
             > <Tooltip title={'Sign In'}><IconButton
               onClick={() => {
@@ -186,7 +188,7 @@ function SignUp() {
           >
             <FormControlLabel sx={{
               backgroundColor: 'background.light',
-              color: 'text.light',
+              color: 'text.accent',
               borderRadius: 2,
               paddingRight: 2
             }} value="c" control={<Radio sx={{
@@ -271,7 +273,7 @@ function SignUp() {
 
   return (
     <Box
-      pt={10}
+      mt={14}
       sx={{
         width: '100%',
         backgroundColor: 'background.main'

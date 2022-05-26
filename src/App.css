@@ -43,7 +43,7 @@
 }
 
 .practice{
-  background-color: #633cbc;
+  background-color: #47298b;
 }
 
 .textFieldColor {
@@ -58,5 +58,12 @@
 
 
 .masterTextField{
-  color:purple !important;
+  color:#f2f2f2 !important;
+}
+
+.backgroundLight{
+  background-color: #282c34;
+}
+.backgroundDark {
+  background-color: #47298b;
 }

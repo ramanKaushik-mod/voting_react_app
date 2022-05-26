@@ -1,7 +1,7 @@
 
 
 import { ArrowBackOutlined, ExpandLess, ExpandMore, Poll, RefreshRounded } from '@mui/icons-material'
-import { Box, Button, CircularProgress, Collapse, Divider, FormControl, FormControlLabel, Grid, IconButton, ListItemButton, ListItemIcon, ListItemText, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableHead, TableRow, ToggleButton, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, CircularProgress, Collapse, Divider, FormControl, FormControlLabel, Grid, IconButton, ListItemButton, ListItemIcon, ListItemText, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableHead, TableRow, ToggleButton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Chart as chartjs } from "chart.js/auto";
 import { Bar } from 'react-chartjs-2'
@@ -175,7 +175,7 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
                         <PollData deepInfo={pollInfo} />
                     </Grid>
                     <Grid item>
-                        {isActiveOrNot(new Date(pollInfo['startdate']), new Date(pollInfo['enddate'])) === 'Active'?(!vsov
+                        {isActiveOrNot(new Date(pollInfo['startdate']), new Date(pollInfo['enddate'])) === 'Active' ? (!vsov
                             ? <VoteSection cArr={cArr} pID={pollInfo.pollId} vID={vID} refresh={refresh} sD={pollInfo['startdate']} eD={pollInfo['enddate']} />
                             : <Grid item container
                                 justifyContent={'center'}
@@ -199,18 +199,22 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
                                     {`${'you have already voted for this poll'.toUpperCase()}`}
                                 </Typography>
 
-                            </Grid>):<Box></Box>}
+                            </Grid>) : <Box></Box>}
                     </Grid>
                 </Grid>
             </Grid>
             <Grid item
 
                 sx={{ width: '50%', }}>
-                <Box
-                    bgcolor={'background.chartColor'}
-                    p={2}
-                    borderRadius={2}
+                <Card
+                    elevation={10}
+                    sx={{
+                        backgroundColor: 'background.chartColor',
+                        borderRadius: 2,
+                        paddingX: 2
+                    }}
                 >
+                    <CardContent>
                     <Bar
                         data={{
                             labels: cNames,   // should contain candidate names
@@ -227,7 +231,9 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
                             maintainAspectRatio: false
                         }}
                     />
-                </Box></Grid>
+                    </CardContent>
+                   
+                </Card></Grid>
         </Grid>
     )
 }
@@ -264,7 +270,7 @@ export default function VoterSubscriptions() {
             <Grid container justifyContent={"center"}>
 
                 <Grid
-                    container
+                    container item
                     sx={{
                         width: '100%'
                     }}
@@ -273,7 +279,7 @@ export default function VoterSubscriptions() {
                 >
                     <Grid item container
                         p={2}
-                        mb={2}
+                        m={2}
                         justifyContent={'space-between'}
                         alignItems={'center'}
                         direction={'row-reverse'}
@@ -308,29 +314,37 @@ export default function VoterSubscriptions() {
                     </Grid>
                     {/* for data */}
                     {data.map((d) => (
-                        <Box
+                        <Grid container
+                            justifyContent={'center'}
+                            alignItems={'center'}
                             m={2}
                             style={{
-                                width: '100%',
+                                width: '100%'
                             }}
                             key={d.pollInfo.pollId}
                         >
-                            <GetChartSectionForVoter
-                                pollInfo={d.pollInfo}
-                                vsov={d.vsov}
-                                cArr={d.cArr}
-                                vID={vData.voterId}
-                                refresh={handleRefresh}
-                            />
-                            <Box
-                                m={2}
-                                borderRadius={2}
-                                sx={{
-                                    width: '100%',
-                                    height: 4,
-                                    backgroundColor: 'background.main'
-                                }} ></Box>
-                        </Box>
+                            <Grid item>
+
+                                <GetChartSectionForVoter
+                                    pollInfo={d.pollInfo}
+                                    vsov={d.vsov}
+                                    cArr={d.cArr}
+                                    vID={vData.voterId}
+                                    refresh={handleRefresh}
+                                />
+                            </Grid>
+                            <Grid item container>
+                                <Box
+                                    m={2}
+                                    borderRadius={2}
+                                    sx={{
+                                        width: '100%',
+                                        height: 2,
+                                        backgroundColor: 'background.main'
+                                    }} ></Box>
+                            </Grid>
+
+                        </Grid>
                     ))}
                 </Grid></Grid>
         </Paper>

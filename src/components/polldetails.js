@@ -61,7 +61,7 @@ function PollDetails() {
                 >
                     <Grid item container
                         p={2}
-                        mb={2}
+                        m={2}
                         justifyContent={'space-between'}
                         alignItems={'center'}
                         direction={'row-reverse'}
@@ -72,7 +72,7 @@ function PollDetails() {
                         }}
                     >
                         {!isVSPSPending ? <IconButton
-                        title={'refresh dashboard'}
+                            title={'refresh dashboard'}
                             onClick={() => {
                                 if (!isVSPSPending) {
                                     setRefresh(!refresh)
@@ -96,23 +96,31 @@ function PollDetails() {
                     </Grid>
                     {vsps.length === 0 && onEmptyShowMessage('you have not created any poll yet, So nothing to display')}
                     {vsps.map((data) => (
-                        <Box
+                        <Grid container
+                            justifyContent={'center'}
+                            alignItems={'center'}
                             m={2}
                             style={{
                                 width: '100%'
                             }}
                             key={data.pid}
                         >
-                            <GetChartSection pollInfo={data.poll} deepInfo={data.cids} />
-                            <Box
-                                m={2}
-                                borderRadius={2}
-                                sx={{
-                                    width: '100%',
-                                    height: 4,
-                                    backgroundColor: 'background.main'
-                                }} ></Box>
-                        </Box>
+                            <Grid item>
+                                <GetChartSection pollInfo={data.poll} deepInfo={data.cids} />
+
+                            </Grid>
+                            <Grid item container>
+                                <Box
+                                    m={2}
+                                    borderRadius={2}
+                                    sx={{
+                                        width: '100%',
+                                        height: 2,
+                                        backgroundColor: 'background.main'
+                                    }} ></Box>
+
+                            </Grid>
+                        </Grid>
                     ))
                     }
                 </Grid></Grid>

@@ -1,22 +1,24 @@
-import { DashboardOutlined, HomeOutlined, PollOutlined } from '@mui/icons-material'
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, Grid, TextField, Typography } from '@mui/material'
+import { Clear, ClearAllOutlined, DashboardOutlined, HomeOutlined, PollOutlined } from '@mui/icons-material'
+import { Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, IconButton, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import SignIn from '../../features/authentication/signIn'
 import SignUp from '../../features/authentication/signUp'
-import { getDashViewSelector, handleForgotPassTurnedOn, handleToPolls, handleSnackBar, resetUserImgStatus, isSignedInSelector, logOut, resetAuthStatus, resetOptionalEmail, resetRegStatus, setDashView, resetProgressForPID } from '../../features/mainSlice'
+import { getDashViewSelector, handleForgotPassTurnedOn, handleToPolls, handleSnackBar, resetUserImgStatus, isSignedInSelector, logOut, resetAuthStatus, resetOptionalEmail, resetRegStatus, setDashView, resetProgressForPID, selectError, resetEverything } from '../../features/mainSlice'
 import VerticalLinearStepper from '../../features/Utility/forDashBoard2'
 import { TYPE_1, TYPE_2, TYPE_3, TYPE_4, VOTING_MOTIVE } from '../constants'
 import DashBoard from '../dashBoard'
 import { GetBoxNew } from './getBox'
 import '../../App.css'
 import ShowSnackbar from '../../snackBar'
+import { ThemeSwitch } from '../../features/Utility/utility'
 
 
 
 function Home() {
   const dashView = useSelector(getDashViewSelector)
   const isSignedIn = useSelector(isSignedInSelector)
+  const error = useSelector(selectError)
   const dispatch = useDispatch()
   const [ndviewText, setNDVIEWText] = useState('')
 
@@ -29,7 +31,7 @@ function Home() {
       variant='h6'
       fontSize={fs !== null ? fs : 13}
       fontWeight={400}
-      color={'text.light'}
+      color={'text.footer'}
     >
       {content}
     </Typography>
@@ -64,93 +66,114 @@ function Home() {
       }}>
       <Box>
         <Typography
-          mb={4}
-          color={'text.white'} variant={'h1'}> Every Vote Counts </Typography>
-        <Box
-          p={2}
-          bgcolor={'background.purple'}
+          mb={2}
+          color={'text.accent'} variant={'h1'}> Every Vote Counts </Typography>
+      </Box>
+      <Card
+        raised={true}
+        elevation={10}
+        sx={{
+          borderRadius: 4,
+          backgroundColor: 'background.purple',
+          marginBottom: 4
+        }}
+
+      >
+        <CardContent>
+          <Box
+            p={2}
+            bgcolor={'background.purple'}
+          >
+            <Typography
+              variant='h6'
+              fontWeight={300}
+              fontSize={17}
+              color={'text.light'}>
+              {`${VOTING_MOTIVE}`}</Typography></Box>
+
+        </CardContent>
+        <CardActions
+          sx={{
+            backgroundColor: 'background.main'
+          }}
         >
-          <Typography
-            variant='h6'
-            fontWeight={300}
-            fontSize={17}
-            color={'text.white'}>
-            {`${VOTING_MOTIVE}`}</Typography></Box></Box>
-      <Box>
-        <Grid container
-          pt={4}
-          justifyContent={'left'}
-          alignItems={'center'}
-          direction='row'>
-          <Grid item>
-            <Box
+
+          <Grid container
+            justifyContent={'center'}
+            alignItems={'center'}
+            direction='row'>
+            <Grid item>
+              <Box
+                justifyContent={'center'}
+                sx={{
+                  width: 300,
+                  maxWidth: '100%',
+                }}
+              >
+                <TextField
+
+                  onChange={(e) => {
+                    setNDVIEWText(e.target.value)
+                  }}
+                  sx={{
+                    backgroundColor: 'background.purple',
+                    borderRadius: 2,
+                    cursor: 4,
+                  }}
+                  InputLabelProps={{
+                    className: 'masterTextField'
+                  }}
+                  InputProps={{
+                    className: 'masterTextField'
+                  }}
+                  fullWidth />
+              </Box>
+            </Grid>
+            <Grid item> <Button
+              variant='filled'
               sx={{
-                width: 300,
-                maxWidth: '100%',
+                marginLeft: 4,
+                color: 'text.light',
+                backgroundColor: 'background.button'
+              }}
+              onClick={() => {
+                dispatch(resetRegStatus())
+                dispatch(resetAuthStatus())
+                if (ndviewText !== null) {
+                  dispatch(setDashView({ 'dash': 2, 'optionalEmail': ndviewText }))
+                } else {
+                  dispatch(setDashView(2))
+                }
+
               }}
             >
-              <TextField
+              Sign Up Now
+            </Button>
 
-                onChange={(e) => {
-                  setNDVIEWText(e.target.value)
-                }}
-                sx={{
-                  backgroundColor: 'text.light',
-                  borderRadius: 2,
-                  cursor: 4,
-                }}
-                InputLabelProps={{
-                  className: 'masterTextField'
-                }}
-                InputProps={{
-                  className: 'masterTextField'
-                }}
-                fullWidth />
-            </Box>
+            </Grid>
           </Grid>
-          <Grid item> <Button
-            variant='outlined'
-            sx={{
-              marginLeft: 4,
-              color: 'text.light',
-              borderColor: 'text.light'
-            }}
-            onClick={() => {
-              dispatch(resetRegStatus())
-              dispatch(resetAuthStatus())
-              if (ndviewText !== null) {
-                dispatch(setDashView({ 'dash': 2, 'optionalEmail': ndviewText }))
-              } else {
-                dispatch(setDashView(2))
-              }
-
-            }}
-          >
-            Sign Up Now
-          </Button>
-
-          </Grid>
-        </Grid>
-      </Box>
+        </CardActions>
+      </Card>
     </Grid>
     <Grid item
-      p={5}
+      p={6}
       sx={{
         width: '50%',
         backgroundColor: 'background.cardBackground'
       }}
     >
       <Card
-
+        elevation={10}
         sx={{
           width: '100%',
-          backgroundColor: 'black',
+          backgroundColor: 'background.cardBackground',
+          borderRadius: 4
         }}
       >
         <CardHeader
 
           sx={{
-            color: 'text.light',
+            color: 'yellow',
           }}
           title="Choose A better platform. Avoid Lines & old ways"
         >
@@ -206,20 +229,20 @@ function Home() {
         container
         sx={{
           width: '100%',
-          backgroundColor: 'background.cardBackground'
+          backgroundColor: 'background.main'
         }}
       >
         <Grid item container
-          pt={10}
+          pt={6}
           px={5}
           pb={1}
           direction='row'
         >
-          {typeCharacter('B', 'text.light', null)}
-          {typeCharacter('B', 'text.light', null)}
-          {typeCharacter('-', 'text.light', null)}
+          {typeCharacter('B', 'text.accent', null)}
+          {typeCharacter('B', 'text.accent', null)}
+          {typeCharacter('-', 'text.accent', null)}
           {typeCharacter('V', 'yellow', null)}
-          {typeCharacter('S', 'white', null)}
+          {typeCharacter('S', 'text.accent', null)}
         </Grid>
         <Grid item container
           mb={4}
@@ -229,9 +252,9 @@ function Home() {
           }}
         >
           <Card
-
+            elevation={10}
             sx={{
-              backgroundColor: 'background.black',
+              backgroundColor: 'background.cardBackground',
               paddingRight: 5
             }}
           >
@@ -258,7 +281,47 @@ function Home() {
   </Grid >
 
 
-  return (<Grid container
+  return (error ? <Grid container
+    justifyContent={'center'}
+    alignItems={'center'}
+    direction={'row'}
+    height={500}
+    alignContent={'center'}
+    color={'background.accent'}
+    bgcolor={'background.main'}>
+    <Grid item container
+      justifyContent={'center'}
+      p={2}
+      m={1}
+    >
+      <Grid item><Typography
+        color={'text.light'}
+        variant={'h1'}
+      >
+        404
+      </Typography></Grid>
+      <Grid item>
+      <Typography
+        color={'text.light'}
+        variant={'h6'}
+      >
+        page not found
+      </Typography>
+      </Grid>
+      
+
+    </Grid>
+    {gridTypo('Connection Error')}
+    <Grid item>
+      <IconButton
+        onClick={() => {
+          dispatch(resetEverything())
+        }}
+      >
+        <Clear color='error'></Clear>
+      </IconButton>
+    </Grid>
+  </Grid> : <Grid container
     justifyContent={'center'}
     bgcolor={'background.main'}
   >
@@ -276,7 +339,7 @@ function Home() {
       container
       component={'footer'}
       p={1}
-      bgcolor={'background.light'}
+      bgcolor={'background.footer'}
 
       sx={{
         width: '100%',
@@ -299,7 +362,7 @@ function Home() {
       alignItems={'center'}
       direction='row'
       padding={3}
-      bgcolor={'background.light'}
+      bgcolor={'background.appbar'}
       color={'text.light'}
     >
       <Grid item container
@@ -314,7 +377,7 @@ function Home() {
         {typeCharacter('B', 'text.light', 'h4')}
         {typeCharacter('-', 'text.light', 'h4')}
         {typeCharacter('V', 'yellow', 'h4')}
-        {typeCharacter('S', 'white', 'h4')}
+        {typeCharacter('S', 'text.light', 'h4')}
 
 
       </Grid>
@@ -363,39 +426,45 @@ function Home() {
         </Grid>
 
         <Grid item
-        >{!isSignedIn && <Box>
-          <Button
-            sx={{
-              paddingX: 3,
-              color: 'red'
-            }}
-            onClick={() => {
-              dispatch(handleForgotPassTurnedOn(false))
+        >
 
-              dispatch(resetOptionalEmail())
-              dispatch(resetAuthStatus())
-              dispatch(setDashView({ 'dash': 1, 'optionalEmail': null }))
-            }}
-          >
-            Sign In
-          </Button>
-          <Button
-            sx={{
-              color: 'text.light',
-              borderColor: 'text.light'
-            }}
-            variant='outlined'
-            onClick={() => {
-              dispatch(resetOptionalEmail())
-              dispatch(resetRegStatus())
-              dispatch(resetAuthStatus())
-              dispatch(setDashView({ 'dash': 2, 'optionalEmail': null }))
-            }}
-          >
-            Sign Up
-          </Button>
-        </Box>}
+          {!isSignedIn && <Box>
+            <ThemeSwitch></ThemeSwitch>
+            <Button
+
+              sx={{
+                paddingX: 1.5,
+                color: 'red'
+              }}
+              onClick={() => {
+                dispatch(handleForgotPassTurnedOn(false))
+
+                dispatch(resetOptionalEmail())
+                dispatch(resetAuthStatus())
+                dispatch(setDashView({ 'dash': 1, 'optionalEmail': null }))
+              }}
+            >
+              Sign In
+            </Button>
+            <Button
+              sx={{
+                color: 'text.light',
+                borderColor: 'text.light'
+              }}
+              variant='outlined'
+              onClick={() => {
+                dispatch(resetOptionalEmail())
+                dispatch(resetRegStatus())
+                dispatch(resetAuthStatus())
+                dispatch(setDashView({ 'dash': 2, 'optionalEmail': null }))
+              }}
+            >
+              Sign Up
+            </Button>
+          </Box>}
           {isSignedIn && <Box>
+
+            <ThemeSwitch></ThemeSwitch>
             <Button
               variant='outlined'
               sx={{
