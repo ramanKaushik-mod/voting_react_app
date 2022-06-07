@@ -6,9 +6,10 @@ import { green, red } from '@mui/material/colors';
 import { useEffect } from 'react';
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useSelector } from 'react-redux'
-import { getTheme } from './features/mainSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { getTheme, sendFormDataThunk } from './features/mainSlice'
 import { Helmet } from 'react-helmet'
+import { useStyles } from './styles/styles';
 
 
 
@@ -82,23 +83,25 @@ const ltheme = createTheme({
   }
 })
 function App() {
+  const dispatch = useDispatch()
   const theme = useSelector(getTheme)
+  const classes = useStyles()
   useEffect(() => {
     AOS.init(
       { duration: 2000 }
     )
     AOS.refresh()
-    !theme
-      ? document.body.style.backgroundColor = "#18191e"
-      : document.body.style.backgroundColor = "#f3f5f9"
+    dispatch(sendFormDataThunk(JSON.stringify({ type: 'GET' })))
+
+    // !theme
+
+    //   ? document.body.style.backgroundImage = 'linear-gradient(90deg, #c94b4b 0%, #4b134f 46%)'
+    //   : document.body.style.backgroundColor = "#f3f5f9"
   }, [theme])
 
   return (
     <div
     >
-      <Helmet>
-        <style>{"body{background-color:orange;}"}</style>
-      </Helmet>
       <ThemeProvider theme={!theme ? dtheme : ltheme}>
         <Router>
           <Routes>

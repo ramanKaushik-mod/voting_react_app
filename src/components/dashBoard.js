@@ -3,7 +3,7 @@ import { Grid, Collapse, IconButton, TextField, Button, CircularProgress, Linear
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { faauiTHUNK, handleSnackBar, handleToPolls, getUserImg, getUserImgStatus, isUserImgPendingSelector, pollRegStatus, resetPollRegStatus, selectAuthStatus, selectCreatorData, selectIsPending, selectVoterData, shouldNavigate, isSignedInSelector } from '../features/mainSlice'
-import { GetCandidateDetails, GetPolls } from '../features/Utility/utility'
+import { GetCandidateDetails, GetPolls, getTextField } from '../features/Utility/utility'
 import { GetBoxNew2 } from './layout-components/getBox'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,9 +14,11 @@ import { getUserType } from '../features/mainSlice'
 import PollDetails from './polldetails'
 import VoterSubscriptions from './voterDetails'
 import '../App.css'
+import { useStyles } from '../styles/styles'
 
 
 function DashBoard() {
+  const classes = useStyles()
 
   const getDec = {
     color: '#f2f2f2'
@@ -138,11 +140,20 @@ function DashBoard() {
   }
 
   const getListItem = (callback) =>
+  <Card
+  
+  elevation={10}
+    sx={{
+      backgroundColor:'transparent',
+      marginTop:2,
+      borderRadius:4,
+      padding:2
+    }}
+  >
     <Grid item container
       justifyContent={'center'}
       alignItems={'center'}
       direction={'row'}
-      bgcolor={'background.black'}
       sx={{
         width: '100%'
       }}
@@ -150,7 +161,7 @@ function DashBoard() {
       {prs === 0 && <Box
         sx={{
           width: '100%',
-          backgroundColor: 'background.cardBackground',
+          backgroundColor: 'transparent',
         }}
       >
         <Grid
@@ -176,8 +187,8 @@ function DashBoard() {
               required={true}
               sx={{
 
-                backgroundColor: "background.cardBackground",
-                width: 240,
+                backgroundColor: "transparent",
+                width: 340,
                 marginBottom: 1,
                 color: 'text.light',
                 accentColor: 'text.light'
@@ -209,6 +220,7 @@ function DashBoard() {
                     label="START-DATE"
                     value={startDate}
 
+
                     onChange={(newValue) => {
 
                       if (newValue) {
@@ -225,7 +237,10 @@ function DashBoard() {
                     InputProps={{
                       className: 'textFieldColor_label'
                     }}
-                    renderInput={(params) => <TextField variant='filled' InputLabelProps={{
+                    renderInput={(params) => <TextField variant='filled' sx={{
+
+                      width: 340,
+                    }} InputLabelProps={{
                       className: 'textFieldColor_label'
                     }} {...params} />} />
                 </Grid>
@@ -246,7 +261,10 @@ function DashBoard() {
                     InputProps={{
                       className: 'textFieldColor_label'
                     }}
-                    renderInput={(params) => <TextField variant='filled' InputLabelProps={{
+                    renderInput={(params) => <TextField variant='filled' sx={{
+
+                      width: 340,
+                    }} InputLabelProps={{
                       className: 'textFieldColor_label'
                     }}
                       InputProps={{
@@ -292,13 +310,12 @@ function DashBoard() {
 
         </Grid></Box>
       }
-      <Box height={2} width='100%' bgcolor={'white'}></Box>
       <Box
 
         display={prs === 200 ? 'block' : 'none'}
         sx={{
           width: '100%',
-          backgroundColor: 'background.cardBackground',
+          backgroundColor: 'transparent',
         }}>
         <Grid
           item container
@@ -308,7 +325,7 @@ function DashBoard() {
           sx={{
             width: '100%',
             padding: 2,
-            margin: 3
+            margin: 2
           }}
         >
           <Grid item container component={'form'}
@@ -328,8 +345,8 @@ function DashBoard() {
                 required={true}
                 sx={{
 
-                  backgroundColor: "background.cardBackground",
-                  width: 240,
+                  backgroundColor: "transparent",
+                  width: 340,
                   marginBottom: 1,
                   color: 'text.light',
                   accentColor: 'text.light'
@@ -355,8 +372,8 @@ function DashBoard() {
                 required={true}
                 sx={{
 
-                  backgroundColor: "background.cardBackground",
-                  width: 240,
+                  backgroundColor: "transparent",
+                  width: 340,
                   marginBottom: 1,
                   color: 'text.light',
                   accentColor: 'text.light'
@@ -415,16 +432,17 @@ function DashBoard() {
             </Grid>
           </Grid></Grid></Box>
 
-    </Grid>
+    </Grid></Card>
 
 
   const sectionOne = (data) => <Grid container
     justifyContent={'center'}
     alignItems={'center'}
     direction={"column"}
-    py={4}
+    pt={3}
+    pb={10}
     sx={{
-      backgroundColor: 'background.light',
+      backgroundColor: 'transparent',
       width: '100%',
     }}>
 
@@ -463,23 +481,21 @@ function DashBoard() {
 
 
   const userInfo = (data) => <Card
+    elevation={10}
     sx={{
-      backgroundColor: 'background.cardBackground',
+      backgroundColor: 'transparent',
+      borderRadius: 4
     }}>
 
     <CardHeader
       sx={{
         color: 'text.light',
-        backgroundColor: 'background.cardBackground',
       }}
       title={`${data[3]}`.toUpperCase()}>
 
     </CardHeader>
 
     <CardContent
-      sx={{
-        backgroundColor: 'background.cardBackground'
-      }}
     >
       <Grid container
         justifyContent={'center'}
@@ -565,13 +581,15 @@ function DashBoard() {
           sx={{
             backgroundColor: '#242429',
             marginX: 4,
-            width: '50%'
+            width: '50%',
+            borderRadius: 4
           }}
         >
           <Table
+
             sx={{
-              backgroundColor: 'black',
-              borderRadius: 2
+              backgroundImage: 'linear-gradient(90deg, #4b134f 0%, #c94b4b 90%)',
+              borderRadius: 4
             }}
           >
             <TableBody>
@@ -598,9 +616,7 @@ function DashBoard() {
       </Grid>
     </CardContent>
     <CardActions
-      sx={{
-        backgroundColor: 'background.black'
-      }}
+      className={classes.opaqueBack}
     >
       <Grid container
         justifyContent={'space-between'}

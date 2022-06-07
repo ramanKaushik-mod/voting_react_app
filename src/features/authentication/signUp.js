@@ -10,8 +10,11 @@ import { selectRegStatus, selectRegSuccess, selectIsPending } from '../mainSlice
 import { useNavigate } from 'react-router-dom'
 import { getTextField } from '../Utility/utility'
 import { Login } from '@mui/icons-material'
+import { useStyles } from '../../styles/styles'
 
 function SignUp() {
+
+  const classes = useStyles()
   const regStatus = useSelector(selectRegStatus)
   const regSuccess = useSelector(selectRegSuccess)
   const isPending = useSelector(selectIsPending)
@@ -81,16 +84,15 @@ function SignUp() {
   },]
 
   const signUpForm = <Card
-  elevation={10}
+    elevation={10}
     sx={{
-      backgroundColor: 'background.cardBackground',
-      paddingBottom: 5
+      backgroundColor: 'transparent',
+      borderRadius: 4
     }}>
 
     <CardHeader
       sx={{
         color: 'text.light',
-        backgroundColor: 'background.cardBackground',
       }}
       title={'BB-VS (Sign Up)'}>
     </CardHeader>
@@ -113,7 +115,7 @@ function SignUp() {
             width: '30%',
           }}>
           <Card
-          elevation={10}
+            elevation={10}
             sx={{
               backgroundColor: 'background.cardBackground',
               borderRadius: 2
@@ -155,10 +157,11 @@ function SignUp() {
     </CardContent>
 
     <CardActions
+      className={classes.opaqueBack}
       sx={{
-        color: 'text.white',
-        backgroundColor: 'background.cardBackground'
-      }}>
+        paddingBottom: 3
+      }}
+    >
       <Grid container
         justifyContent={'center'}
         alignItems={'center'}
@@ -172,6 +175,12 @@ function SignUp() {
             </Typography>
           </Grid>
           <Checkbox
+            sx={{
+              color: 'white',
+              backgroundImage: 'linear-gradient(135deg, orange 0%, red 100%)',
+              opacity: 0.8,
+              marginX: 2
+            }}
             required={true}
             onChange={(e) => {
               setAgeFlag(e.target.checked)
@@ -181,6 +190,9 @@ function SignUp() {
         <Grid item>
           <RadioGroup
             row
+            sx={{
+              marginY:1
+            }}
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
             value={person}
@@ -194,8 +206,14 @@ function SignUp() {
             }} value="c" control={<Radio sx={{
               color: 'background.radio',
             }} />} label="Creator" />
-            <FormControlLabel value="v" control={<Radio sx={{
-              color: 'background.radio',
+            <FormControlLabel sx={{
+              marginX: 1,
+              opacity:0.8,
+              borderRadius:2,
+              paddingRight:2,
+              backgroundImage: 'linear-gradient(135deg, orange 0%, red 100%)',
+            }} value="v" control={<Radio sx={{
+              color: 'white',
             }} />} label="Voter" />
           </RadioGroup>
         </Grid>
@@ -231,11 +249,11 @@ function SignUp() {
                   dispatch(handleSnackBar('confirm your password again, you might have fill it wrong'))
                   return
                 }
-                if(!ageFlag){
+                if (!ageFlag) {
                   dispatch(handleSnackBar('confirm your age'))
                   return
                 }
-                if(person === null){
+                if (person === null) {
                   dispatch(handleSnackBar('choose your type'))
                   return
                 }
@@ -250,7 +268,7 @@ function SignUp() {
 
                   if (person === 'c') {
                     dispatch(addCreatorThunk(JSON.stringify(data)))
-                  } else if(person === 'v'){
+                  } else if (person === 'v') {
                     dispatch(addVoterThunk(JSON.stringify(data)))
                   }
                 }
@@ -276,7 +294,6 @@ function SignUp() {
       mt={14}
       sx={{
         width: '100%',
-        backgroundColor: 'background.main'
       }}>
       <Grid container
         sx={{

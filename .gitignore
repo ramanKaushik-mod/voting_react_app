@@ -11,6 +11,9 @@
 # production
 /build
 
+#videos
+/src/features/Utility/creator.mp4
+/src/features/Utility/voter.mp4
 # misc
 .DS_Store
 .env.local

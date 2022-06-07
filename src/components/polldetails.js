@@ -1,7 +1,7 @@
 
 
 import { ArrowBackOutlined, RefreshRounded } from '@mui/icons-material'
-import { CircularProgress, Grid, IconButton, List, ListItemButton, Paper, ToggleButton, Typography } from '@mui/material'
+import { Card, CircularProgress, Grid, IconButton, List, ListItemButton, Paper, ToggleButton, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -44,12 +44,14 @@ function PollDetails() {
 
 
     return (
-        <Paper
+        <Card
+        elevation={10}
             sx={{
-                backgroundColor: "background.cardBackground",
+                backgroundColor: "transparent",
                 minHeight: 194,
                 padding: 2,
-                marginBottom: 5
+                marginBottom: 5,
+                borderRadius:4
             }}>
             <Grid container justifyContent={"center"}>
                 <Grid container item
@@ -61,7 +63,6 @@ function PollDetails() {
                 >
                     <Grid item container
                         p={2}
-                        m={2}
                         justifyContent={'space-between'}
                         alignItems={'center'}
                         direction={'row-reverse'}
@@ -116,7 +117,7 @@ function PollDetails() {
                                     sx={{
                                         width: '100%',
                                         height: 2,
-                                        backgroundColor: 'background.main'
+                                        backgroundImage:'linear-gradient(to right, #43e97b 0%, #38f9d7 100%)'
                                     }} ></Box>
 
                             </Grid>
@@ -124,7 +125,7 @@ function PollDetails() {
                     ))
                     }
                 </Grid></Grid>
-        </Paper>
+        </Card>
     )
 }
 

@@ -38,7 +38,13 @@ function VoteSection({ cArr, vID, pID, refresh, eD, sD }) {
         setValue(e.target.value)
     }
 
-    return (
+    return (<Card
+        elevation={10}
+        sx={{
+            borderRadius: 4,
+            backgroundColor: 'transparent'
+        }}
+    >
         <Grid container
             justifyContent={'center'}
             alignItems={'left'}
@@ -47,7 +53,7 @@ function VoteSection({ cArr, vID, pID, refresh, eD, sD }) {
             p={2}
             sx={{
                 borderRadius: 2,
-                backgroundColor: 'background.light'
+                backgroundColor: 'transparent'
             }}
             spacing={1}
         >
@@ -132,7 +138,7 @@ function VoteSection({ cArr, vID, pID, refresh, eD, sD }) {
                     Press me to Vote
                 </Button> : (progressForPID === pID && <CircularProgress size='2rem' />)}
             </Grid>
-        </Grid>
+        </Grid></Card>
     )
 }
 
@@ -161,12 +167,18 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
             direction={'row'}
             justifyContent={'center'}
         >
-            <Grid item
-                bgcolor={'background.cardBackground'}
-                p={3}
-                sx={{ width: '50%' }}>
-
-                <Grid item
+            <Card
+                elevation={10}
+                sx={{
+                    width: '40%',
+                    mr: '2',
+                    backgroundColor: 'transparent',
+                    marginRight: 3,
+                    borderRadius: 4,
+                    padding: 3
+                }}
+            >
+                <Grid
                     container
                     justifyContent={'center'}
                     alignItems={'left'}
@@ -186,7 +198,7 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
                                 pl={2}
                                 sx={{
                                     borderRadius: 4,
-                                    backgroundColor: 'background.main'
+                                    backgroundColor: 'transparent'
                                 }}
                                 spacing={1}
                             >
@@ -194,7 +206,8 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
 
                                     fontWeight={400}
                                     sx={{
-                                        color: 'text.main2'
+                                        color: 'text.accent',
+                                        zIndex: 10
                                     }}>
                                     {`${'you have already voted for this poll'.toUpperCase()}`}
                                 </Typography>
@@ -202,37 +215,38 @@ function GetChartSectionForVoter({ pollInfo, cArr, vsov, vID, refresh }) {
                             </Grid>) : <Box></Box>}
                     </Grid>
                 </Grid>
-            </Grid>
+            </Card>
             <Grid item
 
                 sx={{ width: '50%', }}>
                 <Card
                     elevation={10}
                     sx={{
-                        backgroundColor: 'background.chartColor',
+                        opacity: 0.8,
+                        backgroundImage: 'linear-gradient(to right, #43e97b 0%, #38f9d7 100%)',
                         borderRadius: 2,
-                        paddingX: 2
+                        paddign: 2
                     }}
                 >
                     <CardContent>
-                    <Bar
-                        data={{
-                            labels: cNames,   // should contain candidate names
-                            datasets: [{
-                                label: '# of Votes',
-                                data: cVoteCount,    // should contain the votes
-                                borderColor: 'yellow',
-                                borderWidth: 1,
-                            }]
-                        }}
-                        height={400}
-                        width={500}
-                        options={{
-                            maintainAspectRatio: false
-                        }}
-                    />
+                        <Bar
+                            data={{
+                                labels: cNames,   // should contain candidate names
+                                datasets: [{
+                                    label: '# of Votes',
+                                    data: cVoteCount,    // should contain the votes
+                                    borderColor: 'yellow',
+                                    borderWidth: 1,
+                                }]
+                            }}
+                            height={400}
+                            width={500}
+                            options={{
+                                maintainAspectRatio: false,
+                            }}
+                        />
                     </CardContent>
-                   
+
                 </Card></Grid>
         </Grid>
     )
@@ -260,12 +274,14 @@ export default function VoterSubscriptions() {
     }, [refresh])
     return (
 
-        <Paper
+        <Card
+            elevation={10}
             sx={{
-                backgroundColor: "background.cardBackground",
+                backgroundColor: "transparent",
                 minHeight: 194,
                 padding: 2,
-                marginBottom: 5
+                marginBottom: 5,
+                borderRadius: 4
             }}>
             <Grid container justifyContent={"center"}>
 
@@ -279,7 +295,6 @@ export default function VoterSubscriptions() {
                 >
                     <Grid item container
                         p={2}
-                        m={2}
                         justifyContent={'space-between'}
                         alignItems={'center'}
                         direction={'row-reverse'}
@@ -340,14 +355,14 @@ export default function VoterSubscriptions() {
                                     sx={{
                                         width: '100%',
                                         height: 2,
-                                        backgroundColor: 'background.main'
+                                        backgroundImage: 'linear-gradient(to right, #43e97b 0%, #38f9d7 100%)',
                                     }} ></Box>
                             </Grid>
 
                         </Grid>
                     ))}
                 </Grid></Grid>
-        </Paper>
+        </Card>
     )
 }
 

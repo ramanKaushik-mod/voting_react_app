@@ -29,6 +29,28 @@ const checkServerStatus = async () => {
     })
 }
 
+export const sendFormDataThunk = createAsyncThunk(
+    'main/sendFormData',
+    async (stringifiedData) => {
+        return await checkServerStatus().then(async (res) => {
+            let data = await res.json()
+            if (data.res === 200) {
+                return await fetch(getEndPoint('reviews'), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: stringifiedData
+                }).then((res) => {
+                    return res.json()
+                })
+            } else {
+                return res.json()
+            }
+        })
+    }
+)
 
 export const addCreatorThunk = createAsyncThunk(
     'main/addCreator',
@@ -507,7 +529,11 @@ const initialState = {
 
     sSnack: false,
     message: '',
-    theme: false
+    theme: false,
+
+    formData: [],
+    isFormDataPending: false,
+    formDataStatus: false
 }
 
 
@@ -835,9 +861,23 @@ const mainSlice = createSlice({
                 }
                 state.isUserImgPending = false
             })
-            .addCase(faauiTHUNK.rejected, (state, action) => {
+            .addCase(faauiTHUNK.rejected, (state) => {
                 state.isUserImgPending = false
                 state.error = true
+            })
+            .addCase(sendFormDataThunk.pending, (state) => {
+                state.isFormDataPending = true
+            })
+            .addCase(sendFormDataThunk.fulfilled, (state, action) => {
+                state.formDataStatus = action.payload.res
+                if (state.formDataStatus === 200) {
+                    state.formData = action.payload.data
+                }
+                state.isFormDataPending = false
+            })
+            .addCase(sendFormDataThunk.rejected, (state) => {
+                state.isFormDataPending = false
+                state.formDataStatus = 404
             })
     }
 })
@@ -913,6 +953,10 @@ export const getUserImgStatus = (state) => state.main.userImgStatus
 export const isUserImgPendingSelector = (state) => state.main.isUserImgPending
 
 export const getTheme = (state) => state.main.theme
+
+export const getFormData = (state) => state.main.formData
+export const getIsFormDataPending = (state) => state.main.isFormDataPending
+export const getFormDataStatus = (state) => state.main.formDataStatus
 
 // A C T I O N  C R E A T O R S
 

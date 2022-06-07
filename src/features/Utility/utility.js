@@ -15,27 +15,37 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
+import { useStyles } from "../../styles/styles"
 
 
-export const getTextField = (label, placeholder, ip, key, h, value) => {
+export const getTextField = (label, placeholder, ip, key, h, value, m) => {
   return <TextField
     value={value !== null ? value : null}
     required
     component={'div'}
     key={key}
+    type={ip.inputMode}
     inputMode={ip}
     label={label}
     variant={"filled"}
     fullWidth={true}
-    sx={{
-      backgroundColor: "background.cardBackground",
+    multiline={m}
+    rows={4}
+    sx={m === null ? {
+      backgroundColor: "transparent",
       maxWidth: 340,
       color: 'text.light',
       accentColor: 'text.light'
+    } : {
+      backgroundColor: "transparent",
+      color: 'text.light',
+      accentColor: 'text.light'
+
     }}
     onChange={h}
     placeholder={placeholder}
     className={'textFieldColor'}
+
     InputLabelProps={{
       className: 'textFieldColor_label'
     }}
@@ -54,9 +64,15 @@ export const GetCandidateDetails = ({
   }
   const cpID = useSelector(currentPollId)
 
-  const wrapper =
+  const wrapper = <Card
+    elevation={10}
+    sx={{
+      backgroundColor: 'transparent',
+      borderRadius: 4
+    }}
+  >
     <TableContainer aria-label="collapsible table" sx={{
-      backgroundColor: 'black'
+      backgroundColor: 'transparent'
     }}>
       <Table
 
@@ -91,7 +107,7 @@ export const GetCandidateDetails = ({
           }
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainer></Card>
 
   return data.length > 1 && <GetBoxNew2 content={wrapper}></GetBoxNew2>
 
@@ -170,6 +186,7 @@ function Row({ row }) {
 
 
 export const GetPolls = () => {
+  const classes = useStyles()
   const getDec = {
     color: 'text.light'
   }
@@ -178,27 +195,36 @@ export const GetPolls = () => {
   const isPending = useSelector(selectIsPending)
 
   const wrapper =
-    <TableContainer>
-      <Table aria-label="collapsible table" sx={{
-        backgroundColor: 'black'
-      }}>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell sx={getDec}>POLL ID</TableCell>
-            <TableCell sx={getDec} align="right">TITLE</TableCell>
-            <TableCell sx={getDec} align="right">DOC</TableCell>
-            <TableCell sx={getDec} align="right">OPEN</TableCell>
-            <TableCell sx={getDec} align="right">CLOSE</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {pollData.map((row) => (
-            <Row key={row.pollId} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Card
+      elevation={10}
+      sx={{
+        backgroundColor: 'transparent',
+        borderRadius: 4,
+        padding: 2,
+        marginTop: 2,
+      }}
+    >
+      <TableContainer>
+        <Table aria-label="collapsible table" sx={{
+          backgroundImage: 'linear-gradientlinear-gradient(43deg, #4158D0 1%, #C850C0 46%, #FFCC70 100%)'
+        }}>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell sx={getDec}>POLL ID</TableCell>
+              <TableCell sx={getDec} align="right">TITLE</TableCell>
+              <TableCell sx={getDec} align="right">DOC</TableCell>
+              <TableCell sx={getDec} align="right">OPEN ON</TableCell>
+              <TableCell sx={getDec} align="right">CLOSE ON</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pollData.map((row) => (
+              <Row key={row.pollId} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer></Card>
 
   const onEmptyPollData = onEmptyShowMessage('you have not created any poll yet')
   return !isPending
@@ -319,10 +345,18 @@ function GetChartSection({ pollInfo, deepInfo }) {
       justifyContent={'center'}
     >
 
-      <Grid item
-        bgcolor={'background.cardBackground'}
-        p={3}
-        sx={{ width: '50%' }}>
+      <Card
+
+        elevation={10}
+        sx={{
+          width: '40%',
+          mr: '2',
+          backgroundColor: 'transparent',
+          marginRight: 3,
+          borderRadius: 4,
+          padding: 3
+        }}
+      >
         <Grid item
           container
           justifyContent={'center'}
@@ -331,12 +365,13 @@ function GetChartSection({ pollInfo, deepInfo }) {
 
         ><PollData deepInfo={pollInfo} />
         </Grid>
-      </Grid>
+      </Card>
       <Grid item sx={{ width: '50%', }}>
         <Card
           elevation={10}
           sx={{
-            backgroundColor: 'background.chartColor',
+            opacity: 0.8,
+            backgroundImage: 'linear-gradient(to right, #43e97b 0%, #38f9d7 100%)',
             borderRadius: 2,
             paddign: 2
           }}
@@ -472,52 +507,58 @@ export function ShowTable({ data, email }) {
   const cRow = data.cArr
 
 
-  const wrapper = <TableContainer
+  const wrapper = <Card
+    elevation={10}
     sx={{
-      backgroundColor: 'black',
-      color: 'white'
+      marginTop: 2,
+      marginBottom: 2,
+      padding: 2,
+      backgroundColor: 'transparent',
+      borderRadius: 4
     }}
   >
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell >
-            {isActiveOrNot(new Date(row['startdate']), new Date(row['enddate'])) === 'Active' ? <Button
-              sx={{
-                color: 'red',
-                borderColor: 'text.light'
-              }}
-              variant={'outlined'}
-              onClick={() => {
-                dispatch(addVoterPIDS(JSON.stringify({ '_pid': row.pollId, '_email': email })))
-                dispatch(manageAfterSubscribe())
-              }}
-            >
-              SUBSCRIBE
-            </Button> : <Grid
-              container
-              justifyContent={'center'}
-              py={0.5}
-              sx={{
-                color: 'red',
-                border: 1,
-                borderColor: 'text.light',
-                borderRadius: 2,
-                paddingX: 2
-              }}
-            ><Grid item>CLOSED</Grid></Grid>}
-          </TableCell>
-          <TableCell sx={getDec} align="right">POLL-ID</TableCell>
-          <TableCell sx={getDec} align="right">TITLE</TableCell>
-          <TableCell sx={getDec} align="right">DOC</TableCell>
-          <TableCell sx={getDec} align="right">OPEN</TableCell>
-          <TableCell sx={getDec} align="right">CLOSE</TableCell></TableRow>
-      </TableHead>
-      <TableBody>
-        <ShowTableRow row={row} cRow={cRow} />
-      </TableBody>
-    </Table>
-  </TableContainer>
+    <TableContainer
+      sx={{
+        backgroundColor: 'transparent',
+        color: 'white'
+      }}
+    >
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell >
+              <Button
+                sx={{
+                  color: 'red',
+                  borderColor: 'text.light'
+                }}
+                variant={'outlined'}
+                onClick={() => {
+
+                  if (isActiveOrNot(new Date(row['startdate']), new Date(row['enddate'])) === 'Will Active Soon') {
+                    dispatch(addVoterPIDS(JSON.stringify({ '_pid': row.pollId, '_email': email })))
+                  }
+                  dispatch(manageAfterSubscribe())
+                }}
+              >
+                {isActiveOrNot(new Date(row['startdate']), new Date(row['enddate'])) === 'Will Active Soon'
+                  ? 'SUBSCRIBE'
+                  : isActiveOrNot(new Date(row['startdate']), new Date(row['enddate'])) === 'Closed'
+                    ? 'CLOSED X'
+                    : 'Active X'}
+              </Button>
+            </TableCell>
+            <TableCell sx={getDec} align="right">POLL-ID</TableCell>
+            <TableCell sx={getDec} align="right">TITLE</TableCell>
+            <TableCell sx={getDec} align="right">DOC</TableCell>
+            <TableCell sx={getDec} align="right">OPEN ON</TableCell>
+            <TableCell sx={getDec} align="right">CLOSE ON</TableCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <ShowTableRow row={row} cRow={cRow} />
+        </TableBody>
+      </Table>
+    </TableContainer></Card>
 
 
   return (

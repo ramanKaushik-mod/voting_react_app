@@ -3,14 +3,14 @@ import Snackbar from '@mui/material/Snackbar';
 import { getMsg, getSnackBar, resetSnackBar } from './features/mainSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import MuiAlert from '@mui/material/Alert';
+import { useStyles } from './styles/styles';
 
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={10} ref={ref} variant="filled" {...props} />;
-});
+
 
 
 export default function ShowSnackbar() {
+  const classes = useStyles()
   const msg = useSelector(getMsg)
   const snack = useSelector(getSnackBar)
   const dispatch = useDispatch()
@@ -20,6 +20,9 @@ export default function ShowSnackbar() {
     }
     dispatch(resetSnackBar())
   };
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert  className={classes.body} elevation={10} ref={ref} variant="div" {...props} />;
+  });
 
   return (
     <Snackbar
@@ -28,7 +31,7 @@ export default function ShowSnackbar() {
       autoHideDuration={2000}
       onClose={handleClose}
     >
-      <Alert onClose={handleClose} severity={'info'} sx={{ width: '100%' }}>
+      <Alert onClose={handleClose} sx={{ width: '100%' }}>
         {msg}
       </Alert>
     </Snackbar>

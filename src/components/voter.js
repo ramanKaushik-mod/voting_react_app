@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { ShowTable } from '../features/Utility/utility';
 import { getVoterPIDS, selectIsPending, manageAfterSubscribe, getUserImg, faauiTHUNK, pGetPollSelector, pPollStatusSelector, getPoll, handleToPolls, handleSnackBar } from '../features/mainSlice';
 import { Box } from '@mui/system';
+import { useStyles } from '../styles/styles'
 
 
-const Search = styled('div')(({ theme }) => ({
+
+export const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -24,7 +26,7 @@ const Search = styled('div')(({ theme }) => ({
 }));
 
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
@@ -35,7 +37,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         [theme.breakpoints.up('lg')]: {
             width: '80ch',
             '&:focus': {
-                width: '86ch',
+                width: '85ch',
             },
         },
     },
@@ -45,6 +47,8 @@ const p = (data) => console.log(data)
 
 
 function Voter({ vData }) {
+
+    const classes = useStyles()
 
     const gridTypo = (content, p, fs, code) => <Grid item px={p} sx={code === 'm' ? {
         width: '100%'
@@ -109,23 +113,19 @@ function Voter({ vData }) {
     const userInfo = (data) => <Card
         elevation={10}
         sx={{
-            backgroundColor: 'background.cardBackground',
+            backgroundColor: 'transparent',
+            borderRadius: 4
         }}>
 
         <CardHeader
             sx={{
                 color: 'text.light',
-                backgroundColor: 'background.cardBackground',
             }}
             title={`${data[3]}`.toUpperCase()}>
 
         </CardHeader>
 
-        <CardContent
-            sx={{
-                backgroundColor: 'background.cardBackground'
-            }}
-        >
+        <CardContent>
 
             <Grid container
                 justifyContent={'center'}
@@ -208,15 +208,15 @@ function Voter({ vData }) {
                 </Grid>
                 <Grid item container
                     sx={{
-                        backgroundColor: '#242429',
+                        backgroundColor: 'transparent',
                         marginX: 4,
                         width: '50%'
                     }}
                 >
                     <Table
                         sx={{
-                            backgroundColor: 'black',
-                            borderRadius: 2
+                            backgroundImage: 'linear-gradient(90deg, #4b134f 0%, #c94b4b 90%)',
+                            borderRadius: 4
                         }}
                     >
                         <TableBody>
@@ -230,11 +230,11 @@ function Voter({ vData }) {
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={getDec}>Email</TableCell>
-                                <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
+                                <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={getDec}>Contact</TableCell>
-                                <TableCell sx={getDec}>{`${data[2]}`}</TableCell>
+                                <TableCell sx={getDec}>{`${data[1]}`}</TableCell>
                             </TableRow>
 
                         </TableBody>
@@ -242,7 +242,9 @@ function Voter({ vData }) {
                 </Grid>
             </Grid>
         </CardContent>
-        <CardActions >
+        <CardActions
+            className={classes.opaqueBack}
+        >
             <Grid container
                 justifyContent={'space-between'}
                 alignItems={'center'}
@@ -340,7 +342,7 @@ function Voter({ vData }) {
             alignItems={'center'}
             direction={"column"}
             sx={{
-                backgroundColor: 'background.light',
+                backgroundColor: 'transparent',
                 width: '100%',
             }}>
 
@@ -357,7 +359,7 @@ function Voter({ vData }) {
                     justifyContent={'center'}>
                     {(pollStatus === 200) && <ShowTable data={pollData} email={vData.voterId} />}
                     {(pollStatus === 190) && <Grid
-                    bgcolor={'background.cardBackground'}
+                        bgcolor={'background.cardBackground'}
                         container
                         justifyContent={'center'}
                         alignItems={'center'}

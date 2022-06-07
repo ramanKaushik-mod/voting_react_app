@@ -15,8 +15,11 @@ import {
 } from '../mainSlice'
 import { AppRegistrationRounded, ArrowBackIos, Login, LoginRounded, ResetTvRounded } from '@mui/icons-material'
 import { logIn, resetAuthStatus, setDashView } from '../mainSlice'
+import { useStyles } from '../../styles/styles'
 
 function SignIn() {
+
+  const classes = useStyles()
 
   const isPending = useSelector(selectIsPending)
   const authStatus = useSelector(selectAuthStatus)
@@ -93,15 +96,15 @@ function SignIn() {
   ]
 
   const signInForm = <Card
-  elevation={10}
+    elevation={10}
     sx={{
-      backgroundColor: 'background.cardBackground',
+      backgroundColor: 'transparent',
+      borderRadius: 4
     }}
   >
     <CardHeader
       sx={{
         color: 'text.light',
-        backgroundColor: 'background.cardBackground',
       }}
       title={!forgotPassTurnedOn ? 'BB-VS (Sign In)' : 'BB-VS Update passcode'}
     >
@@ -110,9 +113,6 @@ function SignIn() {
     </CardHeader>
 
     <CardContent
-      sx={{
-        backgroundColor: 'background.cardBackground'
-      }}
     >
       <Grid item container justifyContent={'center'} alignItems={'center'} direction={'row'}
         sx={{
@@ -132,7 +132,7 @@ function SignIn() {
             width: '30%',
           }}>
           <Card
-          elevation={10}
+            elevation={10}
             sx={{
               backgroundColor: 'background.cardBackground',
               borderRadius: 2
@@ -226,9 +226,9 @@ function SignIn() {
     </CardContent>
     <CardActions
       sx={{
-        color: 'text.white',
-        backgroundColor: 'background.cardBackground'
+        paddingTop: 3
       }}
+      className={classes.opaqueBack}
     ><Grid container
       justifyContent={'center'}
       alignItems={'center'}
@@ -251,7 +251,15 @@ function SignIn() {
               color: 'background.radio',
             }} />} label="Creator" />
 
-            <FormControlLabel value="v" control={<Radio sx={{
+            <FormControlLabel sx={{
+
+              marginRight: 1,
+              opacity: 0.8,
+              borderRadius: 2,
+              paddingRight: 2,
+              backgroundImage: 'linear-gradient(135deg, orange 0%, red 100%)',
+
+            }} value="v" control={<Radio sx={{
               color: 'background.radio',
             }} />} label="Voter" />
           </RadioGroup>
@@ -283,7 +291,7 @@ function SignIn() {
                   dispatch(handleSnackBar('password must be 6 characters long'))
                   return
                 }
-                if(person === null){
+                if (person === null) {
                   dispatch(handleSnackBar('choose your type'))
                   return
                 }
@@ -337,7 +345,7 @@ function SignIn() {
                   dispatch(handleSnackBar('Enter a valid email address'))
                   return
                 }
-                if(uid.length !== 8){
+                if (uid.length !== 8) {
                   dispatch(handleSnackBar('Enter your 8 digit UID'))
                   return
                 }
@@ -345,7 +353,7 @@ function SignIn() {
                   dispatch(handleSnackBar('password must be 6 characters long'))
                   return
                 }
-                if(person === null){
+                if (person === null) {
                   dispatch(handleSnackBar('choose your type'))
                   return
                 }
@@ -371,7 +379,7 @@ function SignIn() {
       mt={14}
       sx={{
         width: '100%',
-        backgroundColor: 'background.cardBackground'
+        backgroundColor: 'transparent'
       }}>
       <Grid container
         sx={{

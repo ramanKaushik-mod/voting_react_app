@@ -1,10 +1,10 @@
-import { Clear, ClearAllOutlined, DashboardOutlined, HomeOutlined, PollOutlined } from '@mui/icons-material'
-import { Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, IconButton, TextField, Typography } from '@mui/material'
+import { ArrowBackIos, ArrowForwardIos, Clear, DashboardOutlined, HomeOutlined, PollOutlined } from '@mui/icons-material'
+import { Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, IconButton, TextField, Typography, Avatar } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import SignIn from '../../features/authentication/signIn'
 import SignUp from '../../features/authentication/signUp'
-import { getDashViewSelector, handleForgotPassTurnedOn, handleToPolls, handleSnackBar, resetUserImgStatus, isSignedInSelector, logOut, resetAuthStatus, resetOptionalEmail, resetRegStatus, setDashView, resetProgressForPID, selectError, resetEverything } from '../../features/mainSlice'
+import { getDashViewSelector, handleForgotPassTurnedOn, handleToPolls, handleSnackBar, resetUserImgStatus, isSignedInSelector, logOut, resetAuthStatus, resetOptionalEmail, resetRegStatus, setDashView, resetProgressForPID, selectError, resetEverything, manageAfterSubscribe } from '../../features/mainSlice'
 import VerticalLinearStepper from '../../features/Utility/forDashBoard2'
 import { TYPE_1, TYPE_2, TYPE_3, TYPE_4, VOTING_MOTIVE } from '../constants'
 import DashBoard from '../dashBoard'
@@ -12,6 +12,8 @@ import { GetBoxNew } from './getBox'
 import '../../App.css'
 import ShowSnackbar from '../../snackBar'
 import { ThemeSwitch } from '../../features/Utility/utility'
+import { useStyles } from '../../styles/styles'
+import UView from '../uReview'
 
 
 
@@ -21,6 +23,8 @@ function Home() {
   const error = useSelector(selectError)
   const dispatch = useDispatch()
   const [ndviewText, setNDVIEWText] = useState('')
+  const classes = useStyles()
+  const [ctrlABView, setCtrlABView] = useState(true)
 
   // H E L P E R S
 
@@ -57,7 +61,7 @@ function Home() {
     alignItems={'center'}
     direction={'row'}
     pt={11}
-    bgcolor={'background.light'}
+    bgcolor={'transparent'}
   >
     <Grid item
       px={5}
@@ -73,16 +77,14 @@ function Home() {
         raised={true}
         elevation={10}
         sx={{
-          borderRadius: 4,
-          backgroundColor: 'background.purple',
-          marginBottom: 4
+          backgroundColor: 'transparent',
+          borderRadius: 4
         }}
 
       >
         <CardContent>
           <Box
             p={2}
-            bgcolor={'background.purple'}
           >
             <Typography
               variant='h6'
@@ -93,9 +95,7 @@ function Home() {
 
         </CardContent>
         <CardActions
-          sx={{
-            backgroundColor: 'background.main'
-          }}
+          className={classes.opaqueBack}
         >
 
           <Grid container
@@ -159,21 +159,19 @@ function Home() {
       p={6}
       sx={{
         width: '50%',
-        backgroundColor: 'background.cardBackground'
+        backgroundColor: 'transparent'
       }}
     >
       <Card
         elevation={10}
         sx={{
-          width: '100%',
-          backgroundColor: 'background.cardBackground',
+          backgroundColor: 'transparent',
           borderRadius: 4
         }}
       >
         <CardHeader
-
           sx={{
-            color: 'yellow',
+            color: 'yellow'
           }}
           title="Choose A better platform. Avoid Lines & old ways"
         >
@@ -189,10 +187,11 @@ function Home() {
         />
         <CardContent
           sx={{
-            color: 'white',
-            width: '100%'
-          }}>
-          <Typography gutterBottom variant="h5" component="div">
+            backgroundImage: 'linear-gradient(95deg, #4b134f 0%, #c94b4b 100%)'
+
+          }}
+        >
+          <Typography gutterBottom variant="h5" component="div" color={'yellow'}>
             Vote for a better future
           </Typography>
           <Grid container
@@ -210,7 +209,7 @@ function Home() {
       </Card>
 
     </Grid>
-  </Grid>
+  </Grid >
 
 
   const subWrapper = <Grid
@@ -225,58 +224,67 @@ function Home() {
     {dashView === 2 && <SignUp></SignUp>}
     {dashView === 0 && <Grid item container
     >
-      <Grid
-        container
+      <Card
+        elevation={10}
         sx={{
-          width: '100%',
-          backgroundColor: 'background.main'
-        }}
-      >
-        <Grid item container
-          pt={6}
-          px={5}
-          pb={1}
-          direction='row'
-        >
-          {typeCharacter('B', 'text.accent', null)}
-          {typeCharacter('B', 'text.accent', null)}
-          {typeCharacter('-', 'text.accent', null)}
-          {typeCharacter('V', 'yellow', null)}
-          {typeCharacter('S', 'text.accent', null)}
-        </Grid>
-        <Grid item container
-          mb={4}
-          px={6}
+          bgcolor: 'transparent', borderRadius: 4,
+          border: 1,
+          borderColor: 'white',
+        }}>
+        <Grid
+          container
           sx={{
-            width: '100%'
+            width: '100%',
+            backgroundColor: 'transparent',
+            borderRadius: 4
           }}
         >
-          <Card
-            elevation={10}
+          <Grid item container
+            pt={6}
+            px={5}
+            pb={1}
+            direction='row'
+          >
+            {typeCharacter('B', 'text.accent', null)}
+            {typeCharacter('B', 'text.accent', null)}
+            {typeCharacter('-', 'text.accent', null)}
+            {typeCharacter('V', 'yellow', null)}
+            {typeCharacter('S', 'text.accent', null)}
+          </Grid>
+          <Grid item container
+            mb={4}
+            px={6}
             sx={{
-              backgroundColor: 'background.cardBackground',
-              paddingRight: 5
+              width: '100%'
             }}
           >
-            <CardContent> {gridTypo(TYPE_1, 0, 16, 'm')}
-              {gridTypo(TYPE_2, 0, 16, 'm')}
-              {gridTypo(TYPE_3, 0, 16, 'm')}
-              {gridTypo(TYPE_4, 0, 16, 'm')}
+            <Card
+              elevation={10}
+              sx={{
+                backgroundColor: 'transparent',
+                paddingRight: 5,
+                borderRadius: 4
+              }}
+            >
+              <CardContent> {gridTypo(TYPE_1, 0, 16, 'm')}
+                {gridTypo(TYPE_2, 0, 16, 'm')}
+                {gridTypo(TYPE_3, 0, 16, 'm')}
+                {gridTypo(TYPE_4, 0, 16, 'm')}
 
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <Typography
-            color={'text.light'}
-            variant='h6'
-            fontWeight={200}
-          >
+            <Typography
+              color={'text.light'}
+              variant='h6'
+              fontWeight={200}
+            >
 
-          </Typography>
-        </Grid>
-      </Grid>
+            </Typography>
+          </Grid>
+        </Grid></Card>
       <VerticalLinearStepper />
-
+      <UView />
     </Grid>}
   </Grid >
 
@@ -288,7 +296,8 @@ function Home() {
     height={500}
     alignContent={'center'}
     color={'background.accent'}
-    bgcolor={'background.main'}>
+    sx={classes.body}
+    >
     <Grid item container
       justifyContent={'center'}
       p={2}
@@ -301,14 +310,14 @@ function Home() {
         404
       </Typography></Grid>
       <Grid item>
-      <Typography
-        color={'text.light'}
-        variant={'h6'}
-      >
-        page not found
-      </Typography>
+        <Typography
+          color={'text.light'}
+          variant={'h6'}
+        >
+          page not found
+        </Typography>
       </Grid>
-      
+
 
     </Grid>
     {gridTypo('Connection Error')}
@@ -323,172 +332,211 @@ function Home() {
     </Grid>
   </Grid> : <Grid container
     justifyContent={'center'}
-    bgcolor={'background.main'}
+    mt={2}
+    bgcolor={'transparent'}
   >
     <ShowSnackbar></ShowSnackbar>
     {!isSignedIn && <Grid item>
       <GetBoxNew content={subWrapper}>
       </GetBoxNew>
-
     </Grid>}
 
     {isSignedIn && <Grid item>
       <GetBoxNew content={<DashBoard />}></GetBoxNew>
     </Grid>}
+    <Grid item container
+        position={'fixed'}
+        justifyContent={'right'}
+        alignItems={'center'}
+        width={'95%'}>
     <Grid item
       container
-      component={'footer'}
-      p={1}
-      bgcolor={'background.footer'}
-
+      width={'26%'}
+      justifyContent={'right'}
+      alignItems={'center'}
+      direction='row'
+      px={3}
+      py={2}
+      mb={1}
+      className={classes.appbar}
       sx={{
-        width: '100%',
         position: 'fixed',
         bottom: 0,
-        left: 0
       }}
     >
 
       {gridTypo('© 2022 BB-VS, Inc.', 3, 13)}
       {gridTypo('terms', 1, 13)}
       {gridTypo('privacy', 1, 13)}
-
-    </Grid>
-
-    <Grid
-      container
-      position={'fixed'}
-      justifyContent={'center'}
-      alignItems={'center'}
-      direction='row'
-      padding={3}
-      bgcolor={'background.appbar'}
-      color={'text.light'}
-    >
-      <Grid item container
-        position={'absolute'}
-        justifyContent={'center'}
-        direction='row'
-        sx={{
-          width: '10%'
-        }}
+      <Avatar
+      sx={{
+        height:30,
+        width:30
+      }}
       >
-        {typeCharacter('B', 'text.light', 'h4')}
-        {typeCharacter('B', 'text.light', 'h4')}
-        {typeCharacter('-', 'text.light', 'h4')}
-        {typeCharacter('V', 'yellow', 'h4')}
-        {typeCharacter('S', 'text.light', 'h4')}
 
+      </Avatar>
 
-      </Grid>
-      <Grid item container
-        sx={{
-          width: '100%',
-        }}
-        justifyContent={'space-between'}
+    </Grid></Grid>
+    <Grid item container
+        position={'fixed'}
+        justifyContent={'left'}
         alignItems={'center'}
-        direction={'row'}>
-
-        <Grid item
+        width={'95%'}
+    >
+      <Grid item
+      width={ctrlABView ? '100%' : '20%'}
+        container
+        justifyContent={'center'}
+        alignItems={'left'}
+        direction='row'
+        px={3}
+        py={2}
+        className={classes.appbar}
+      >
+        <Grid item container
+          position={'absolute'}
+          justifyContent={'center'}
+          direction='row'
+          sx={{
+            width: '10%'
+          }}
+          display={ctrlABView ? 'flex' : 'none'}
         >
-          <Box>
-            <Grid container
-            >
-              <PollOutlined fontSize='large' sx={{
-                color: 'red'
-              }} ></PollOutlined>
+          {typeCharacter('B', 'text.light', 'h4')}
+          {typeCharacter('B', 'text.light', 'h4')}
+          {typeCharacter('-', 'text.light', 'h4')}
+          {typeCharacter('V', 'yellow', 'h4')}
+          {typeCharacter('S', 'text.light', 'h4')}
 
-              {!isSignedIn ? <Button
+
+        </Grid>
+        <Grid item container
+          sx={{
+            width: '100%',
+          }}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          direction={'row'}>
+
+          <Grid item
+          >
+            <Box>
+              <Grid container
+              >
+                <PollOutlined fontSize='large' sx={{
+                  color: 'red'
+                }} ></PollOutlined>
+
+                {!isSignedIn ?
+                  <Button
+                    onClick={() => {
+                      dispatch(resetOptionalEmail())
+                      dispatch(setDashView({ 'dash': 0, 'optionalEmail': ndviewText }))
+                    }}
+                    endIcon={<HomeOutlined sx={{
+                      color: 'yellow'
+                    }} />}
+                  >
+                    {typo('Home')}
+                  </Button>
+
+                  : <Button
+                    onClick={() => {
+                      dispatch(handleToPolls(false))
+                    }}
+                    endIcon={<DashboardOutlined sx={{
+                      color: 'red'
+                    }} />}
+                  >
+                    {typo('Dashboard')}
+                  </Button>}
+                <Box>
+                  <IconButton
+                    sx={{
+                      color: 'yellow'
+                    }}
+                    onClick={() => {
+                      setCtrlABView(!ctrlABView)
+                    }}
+                  >
+                    {ctrlABView ? <ArrowBackIos fontSize='small'></ArrowBackIos> : <ArrowForwardIos fontSize='small'></ArrowForwardIos>}
+                  </IconButton>
+                </Box>
+              </Grid>
+            </Box>
+
+          </Grid>
+
+          <Grid item
+            display={ctrlABView ? 'initial' : 'none'}
+          >
+
+            {!isSignedIn && <Box>
+              {/* <ThemeSwitch></ThemeSwitch> */}
+              <Button
+
+                sx={{
+                  paddingX: 2,
+                  marginX: 1,
+                  color: 'red'
+
+                }}
+                onClick={() => {
+                  dispatch(handleForgotPassTurnedOn(false))
+
+                  dispatch(resetOptionalEmail())
+                  dispatch(resetAuthStatus())
+                  dispatch(setDashView({ 'dash': 1, 'optionalEmail': null }))
+                }}
+              >
+                Sign In
+              </Button>
+              <Button
+                sx={{
+                  color: 'text.light',
+                  borderColor: 'text.light'
+                }}
+                variant='outlined'
                 onClick={() => {
                   dispatch(resetOptionalEmail())
-                  dispatch(setDashView({ 'dash': 0, 'optionalEmail': ndviewText }))
+                  dispatch(resetRegStatus())
+                  dispatch(resetAuthStatus())
+                  dispatch(setDashView({ 'dash': 2, 'optionalEmail': null }))
                 }}
-                endIcon={<HomeOutlined sx={{
-                  color: 'yellow'
-                }} />}
               >
-                {typo('Home')}
+                Sign Up
+              </Button>
+            </Box>}
+            {isSignedIn && <Box>
+
+              {/* <ThemeSwitch></ThemeSwitch> */}
+              <Button
+                variant='outlined'
+                sx={{
+                  color: 'text.light',
+                  borderColor: 'text.light'
+                }}
+                onClick={() => {
+                  dispatch(handleSnackBar('world needs you'))
+                  dispatch(resetProgressForPID())
+                  dispatch(handleToPolls(false))
+                  dispatch(setDashView({ dash: 0, optionalEmail: null }))
+                  dispatch(resetAuthStatus())
+                  dispatch(resetUserImgStatus())
+                  dispatch(manageAfterSubscribe())
+                  dispatch(logOut())
+                }}
+              >
+                sign out
               </Button>
 
-                : <Button
-                  onClick={() => {
-                    dispatch(handleToPolls(false))
-                  }}
-                  endIcon={<DashboardOutlined sx={{
-                    color: 'red'
-                  }} />}
-                >
-                  {typo('Dashboard')}
-                </Button>}
-
-            </Grid>
-          </Box>
+            </Box>
+            }
+          </Grid>
         </Grid>
-
-        <Grid item
-        >
-
-          {!isSignedIn && <Box>
-            <ThemeSwitch></ThemeSwitch>
-            <Button
-
-              sx={{
-                paddingX: 1.5,
-                color: 'red'
-              }}
-              onClick={() => {
-                dispatch(handleForgotPassTurnedOn(false))
-
-                dispatch(resetOptionalEmail())
-                dispatch(resetAuthStatus())
-                dispatch(setDashView({ 'dash': 1, 'optionalEmail': null }))
-              }}
-            >
-              Sign In
-            </Button>
-            <Button
-              sx={{
-                color: 'text.light',
-                borderColor: 'text.light'
-              }}
-              variant='outlined'
-              onClick={() => {
-                dispatch(resetOptionalEmail())
-                dispatch(resetRegStatus())
-                dispatch(resetAuthStatus())
-                dispatch(setDashView({ 'dash': 2, 'optionalEmail': null }))
-              }}
-            >
-              Sign Up
-            </Button>
-          </Box>}
-          {isSignedIn && <Box>
-
-            <ThemeSwitch></ThemeSwitch>
-            <Button
-              variant='outlined'
-              sx={{
-                color: 'text.light',
-                borderColor: 'text.light'
-              }}
-              onClick={() => {
-                dispatch(handleSnackBar('world needs you'))
-                dispatch(resetProgressForPID())
-                dispatch(handleToPolls(false))
-                dispatch(setDashView({ dash: 0, optionalEmail: null }))
-                dispatch(resetAuthStatus())
-                dispatch(resetUserImgStatus())
-                dispatch(logOut())
-              }}
-            >
-              sign out
-            </Button>
-
-          </Box>
-          }
-        </Grid>
+      </Grid> 
       </Grid>
-    </Grid>
   </Grid>
 
 
